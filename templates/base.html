@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Interactive Generative Studio{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="site-noise" aria-hidden="true"></div>
+
+    <header class="topbar">
+        <a class="brandmark" href="{{ url_for('home') }}">
+            <span class="brandmark-label">Interactive</span>
+            <strong>Generative Studio</strong>
+        </a>
+
+        <nav class="nav-links" aria-label="Primary navigation">
+            <a class="{% if request.endpoint == 'home' %}is-active{% endif %}" href="{{ url_for('home') }}">Home</a>
+            <a class="{% if request.endpoint == 'gallery' %}is-active{% endif %}" href="{{ url_for('gallery') }}">Gallery</a>
+            <a class="{% if request.endpoint == 'generative' %}is-active{% endif %}" href="{{ url_for('generative') }}">Generative Lab</a>
+            <a class="{% if request.endpoint == 'data_art' %}is-active{% endif %}" href="{{ url_for('data_art') }}">Data Art</a>
+            <a class="{% if request.endpoint == 'media_tools' %}is-active{% endif %}" href="{{ url_for('media_tools') }}">Media Tools</a>
+        </nav>
+    </header>
+
+    <main class="page-shell">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <section class="flash-stack" aria-label="Messages">
+                    {% for category, message in messages %}
+                        <article class="flash flash-{{ category }}">{{ message }}</article>
+                    {% endfor %}
+                </section>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>Flask creative studio aligned with the Interactive Generative Studio term project brief.</p>
+        <p>Modules: generative art, data-driven visuals, image or audio processing, gallery delivery.</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

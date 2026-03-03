@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Data Art | Interactive Generative Studio{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <div>
+        <p class="eyebrow">Data Art</p>
+        <h1>Turn data into visual form.</h1>
+    </div>
+    <div class="banner-stats">
+        <div>
+            <strong>{{ available_columns|length }}</strong>
+            <span>numeric columns detected</span>
+        </div>
+        <div>
+            <strong>{{ colormap_options|length }}</strong>
+            <span>color systems</span>
+        </div>
+    </div>
+</section>
+
+<section class="workspace studio-layout">
+    <form class="panel control-panel" method="post" action="{{ url_for('data_art') }}" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="section-heading">
+            <p class="eyebrow">Dataset Controls</p>
+            <h2>Visualization setup</h2>
+        </div>
+
+        <label>Visualization Style
+            <select name="data_style">
+                {% for style_name, description in data_art_styles.items() %}
+                    <option value="{{ style_name }}" {% if params.data_style == style_name %}selected{% endif %}>{{ style_name|capitalize }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>Focus Column
+            <select name="focus_column">
+                <option value="auto" {% if params.focus_column == 'auto' %}selected{% endif %}>Auto</option>
+                {% for column in available_columns %}
+                    <option value="{{ column }}" {% if params.focus_column == column %}selected{% endif %}>{{ column }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <div class="field-grid">
+            <label>Colormap
+                <select name="colormap">
+                    {% for cmap in colormap_options %}
+                        <option value="{{ cmap }}" {% if params.colormap == cmap %}selected{% endif %}>{{ cmap }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Smoothing Window
+                <input type="number" name="smoothing_window" min="1" max="30" value="{{ params.smoothing_window }}">
+            </label>
+        </div>
+
+        <label>Dataset CSV (optional)
+            <input type="file" name="dataset_file" accept=".csv,text/csv">
+        </label>
+
+        <button type="submit" class="btn">Generate Data Artwork</button>
+    </form>
+
+    <section class="panel output-panel">
+        <div class="section-heading">
+            <p class="eyebrow">Output</p>
+            <h2>Rendered visualization</h2>
+        </div>
+
+        {% if generated_image %}
+            <img class="preview" src="{{ url_for('static', filename='generated/' ~ generated_image) }}" alt="Data artwork preview">
+            <div class="hero-actions">
+                <a class="btn btn-outline" href="{{ url_for('download_file', folder='generated', filename=generated_image) }}">Download PNG</a>
+                <a class="btn btn-ghost" href="{{ url_for('gallery') }}">Open gallery</a>
+            </div>
+        {% else %}
+            <p class="empty-note">Generate a data artwork to preview it here.</p>
+        {% endif %}
+
+        {% if metadata %}
+            <div class="meta-box">
+                <p><strong>Source:</strong> {{ metadata.source }}</p>
+                <p><strong>Rows used:</strong> {{ metadata.rows }}{% if metadata.original_rows != metadata.rows %} / {{ metadata.original_rows }} original{% endif %}</p>
+                <p><strong>Focus column:</strong> {{ metadata.focus_column }}</p>
+                <p><strong>Secondary column:</strong> {{ metadata.secondary_column }}</p>
+                <p><strong>Style:</strong> {{ metadata.style }}</p>
+                <p><strong>Colormap:</strong> {{ metadata.colormap }}</p>
+                <p><strong>Smoothing:</strong> {{ metadata.smoothing_window }}</p>
+                <p><strong>Numeric columns:</strong> {{ metadata.columns|join(', ') }}</p>
+            </div>
+        {% else %}
+            <div class="meta-box">
+                <p><strong>Preview columns:</strong> {{ available_columns|join(', ') }}</p>
+            </div>
+        {% endif %}
+    </section>
+</section>
+{% endblock %}

@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+static/uploads/*
+!static/uploads/.gitkeep
+static/generated/*
+!static/generated/.gitkeep
+!static/generated/previews/
+static/generated/previews/*
+!static/generated/previews/.gitkeep

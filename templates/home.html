@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Home | Interactive Generative Studio{% endblock %}
+
+{% block content %}
+<section class="hero-grid">
+    <article class="hero-copy panel panel-hero">
+        <p class="eyebrow">Term Project Studio</p>
+        <h1>Create, transform, and export digital artwork.</h1>
+        <div class="hero-actions">
+            <a class="btn" href="{{ url_for('generative') }}">Open Generative Lab</a>
+            <a class="btn btn-outline" href="{{ url_for('gallery') }}">Browse Gallery</a>
+        </div>
+    </article>
+
+    <aside class="insight-stack">
+        <article class="metric-card">
+            <p>Generated images</p>
+            <h2>{{ image_count }}</h2>
+            <span>Saved to <code>static/generated</code></span>
+        </article>
+        <article class="metric-card">
+            <p>Generated audio</p>
+            <h2>{{ audio_count }}</h2>
+            <span>Playable directly from the gallery</span>
+        </article>
+        <article class="metric-card">
+            <p>Palette systems</p>
+            <h2>{{ palette_names|length }}</h2>
+            <span>Built-in plus custom palette strings</span>
+        </article>
+    </aside>
+</section>
+
+<section class="module-grid">
+    <article class="feature-card accent-a">
+        <h2>Generative Lab</h2>
+        <a href="{{ url_for('generative') }}">Enter lab</a>
+    </article>
+    <article class="feature-card accent-b">
+        <h2>Data Art</h2>
+        <a href="{{ url_for('data_art') }}">Build visualization</a>
+    </article>
+    <article class="feature-card accent-c">
+        <h2>Media Tools</h2>
+        <a href="{{ url_for('media_tools') }}">Open toolset</a>
+    </article>
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <p class="eyebrow">Recent Output</p>
+        <h2>Latest exported artworks</h2>
+    </div>
+
+    {% if featured_images %}
+        <div class="preview-strip">
+            {% for image in featured_images %}
+                <a class="preview-thumb" href="{{ url_for('gallery') }}">
+                    <img loading="lazy" src="{{ url_for('static', filename='generated/' ~ image) }}" alt="Recent generated artwork">
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-note">No generated artwork yet. Start from the generative lab or data art module.</p>
+    {% endif %}
+</section>
+{% endblock %}

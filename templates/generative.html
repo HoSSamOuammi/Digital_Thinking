@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+{% block title %}Generative Lab | Interactive Generative Studio{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <div>
+        <p class="eyebrow">Generative Lab</p>
+        <h1>Generate and preview side by side.</h1>
+    </div>
+    <div class="banner-stats">
+        <div>
+            <strong>3</strong>
+            <span>art styles</span>
+        </div>
+        <div>
+            <strong>{{ overlay_shape_count }}</strong>
+            <span>drawn accents</span>
+        </div>
+    </div>
+</section>
+
+<section class="workspace studio-layout">
+    <form class="panel control-panel" method="post" action="{{ url_for('generative') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="overlay_shapes" id="overlayShapesInput" value='{{ overlay_shapes|tojson }}'>
+
+        <div class="section-heading">
+            <p class="eyebrow">Controls</p>
+            <h2>Generation settings</h2>
+        </div>
+
+        <div class="field-grid">
+            <label>Artwork Series
+                <select name="series" id="seriesField">
+                    {% for series_name in series_info.keys() %}
+                        <option value="{{ series_name }}" {% if params.series == series_name %}selected{% endif %}>{{ series_name|capitalize }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <label>Background
+                <select name="background" id="backgroundField">
+                    {% for background_name in background_styles.keys() %}
+                        <option value="{{ background_name }}" {% if params.background == background_name %}selected{% endif %}>{{ background_name|capitalize }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
+
+        <label>Palette
+            <select name="palette" id="paletteField">
+                {% for palette in palette_names %}
+                    <option value="{{ palette }}" {% if params.palette == palette %}selected{% endif %}>{{ palette|capitalize }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>Custom Palette
+            <input type="text" name="custom_palette" id="customPaletteField" value="{{ params.custom_palette }}" placeholder="#f25c54, #f7b267, #0b4f6c">
+        </label>
+
+        <div class="field-grid">
+            <label>Seed
+                <div class="inline-action">
+                    <input type="number" name="seed" id="seedField" value="{{ params.seed }}" placeholder="Optional seed">
+                    <button class="btn btn-ghost" type="button" id="randomSeedButton">Randomize</button>
+                </div>
+            </label>
+
+            <label class="checkbox-label compact-checkbox control-group" id="animationControl">
+                <input type="checkbox" name="animation" id="animationField" {% if params.animation %}checked{% endif %}>
+                Enable kinetic trails
+            </label>
+        </div>
+
+        <label>Number of Shapes <span class="range-value" id="shapeCountLabel">{{ params.number_of_shapes }}</span>
+            <input type="range" min="20" max="900" step="10" value="{{ params.number_of_shapes }}" name="number_of_shapes" id="shapeCountField">
+        </label>
+
+        <label>Size Variation <span class="range-value" id="sizeVariationLabel">{{ params.size_variation }}</span>
+            <input type="range" min="0.4" max="2.6" step="0.1" value="{{ params.size_variation }}" name="size_variation" id="sizeVariationField">
+        </label>
+
+        <label class="control-group" id="densityControl">Density <span class="range-value" id="densityLabel">{{ params.density }}</span>
+            <input type="range" min="0.2" max="1.8" step="0.1" value="{{ params.density }}" name="density" id="densityField">
+        </label>
+
+        <label class="control-group" id="lineDensityControl">Line Detail <span class="range-value" id="lineDensityLabel">{{ params.line_density }}</span>
+            <input type="range" min="0.4" max="2.0" step="0.1" value="{{ params.line_density }}" name="line_density" id="lineDensityField">
+        </label>
+
+        <div class="field-grid">
+            <label>Canvas Width
+                <input type="number" name="canvas_width" id="canvasWidthField" min="360" max="2400" value="{{ params.canvas_width }}">
+            </label>
+            <label>Canvas Height
+                <input type="number" name="canvas_height" id="canvasHeightField" min="280" max="1800" value="{{ params.canvas_height }}">
+            </label>
+        </div>
+
+        <button type="submit" class="btn">Generate Artwork</button>
+    </form>
+
+    <section class="panel output-panel">
+        <div class="section-heading">
+            <p class="eyebrow">Live Preview</p>
+            <h2>Preview</h2>
+        </div>
+
+        <div class="interactive-panel preview-panel">
+            <div class="section-heading inline-heading">
+                <h3>Canvas</h3>
+                <span class="tiny-note" id="overlayCountLabel">{{ overlay_shape_count }} accents</span>
+            </div>
+
+            <div class="preview-stage" id="previewStage">
+                <img id="previewImage" alt="Live preview render">
+                <canvas id="previewBoard" aria-label="Interactive artwork overlay"></canvas>
+            </div>
+
+            <div class="field-grid preview-brush-grid">
+                <label>Brush Shape
+                    <select id="brushShapeField">
+                        <option value="circle">Circle</option>
+                        <option value="square">Square</option>
+                        <option value="triangle">Triangle</option>
+                    </select>
+                </label>
+                <label>Brush Size <span class="range-value" id="brushSizeLabel">24</span>
+                    <input type="range" min="8" max="64" step="2" value="24" id="brushSizeField">
+                </label>
+            </div>
+
+            <div class="hero-actions">
+                <button class="btn btn-outline" type="button" id="clearOverlayButton">Clear overlay</button>
+            </div>
+        </div>
+
+        <div class="section-heading preview-output-heading">
+            <p class="eyebrow">Output</p>
+            <h2>Rendered Artwork</h2>
+        </div>
+
+        {% if generated_image %}
+            <img class="preview" src="{{ url_for('static', filename='generated/' ~ generated_image) }}" alt="Generated artwork">
+            <div class="hero-actions">
+                <a class="btn btn-outline" href="{{ url_for('download_file', folder='generated', filename=generated_image) }}">Download PNG</a>
+                <a class="btn btn-ghost" href="{{ url_for('gallery') }}">View in gallery</a>
+            </div>
+        {% else %}
+            <p class="empty-note">Generate an artwork to export it.</p>
+        {% endif %}
+    </section>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const previewApiUrl = {{ url_for('generative_preview')|tojson }};
+const csrfToken = {{ csrf_token()|tojson }};
+const previewStage = document.getElementById('previewStage');
+const previewImage = document.getElementById('previewImage');
+const previewCanvas = document.getElementById('previewBoard');
+const overlayInput = document.getElementById('overlayShapesInput');
+const overlayCountLabel = document.getElementById('overlayCountLabel');
+const paletteMap = {{ palette_map|tojson }};
+const initialOverlayShapes = {{ overlay_shapes|tojson }};
+
+const shapeCountField = document.getElementById('shapeCountField');
+const sizeVariationField = document.getElementById('sizeVariationField');
+const densityField = document.getElementById('densityField');
+const lineDensityField = document.getElementById('lineDensityField');
+const seedField = document.getElementById('seedField');
+const paletteField = document.getElementById('paletteField');
+const customPaletteField = document.getElementById('customPaletteField');
+const seriesField = document.getElementById('seriesField');
+const backgroundField = document.getElementById('backgroundField');
+const animationField = document.getElementById('animationField');
+const brushShapeField = document.getElementById('brushShapeField');
+const brushSizeField = document.getElementById('brushSizeField');
+const canvasWidthField = document.getElementById('canvasWidthField');
+const canvasHeightField = document.getElementById('canvasHeightField');
+
+const shapeCountLabel = document.getElementById('shapeCountLabel');
+const sizeVariationLabel = document.getElementById('sizeVariationLabel');
+const densityLabel = document.getElementById('densityLabel');
+const lineDensityLabel = document.getElementById('lineDensityLabel');
+const brushSizeLabel = document.getElementById('brushSizeLabel');
+
+const densityControl = document.getElementById('densityControl');
+const lineDensityControl = document.getElementById('lineDensityControl');
+const animationControl = document.getElementById('animationControl');
+
+const canvasContext = previewCanvas.getContext('2d');
+let overlayShapes = Array.isArray(initialOverlayShapes) ? [...initialOverlayShapes] : [];
+let isDrawing = false;
+let previewTimer = null;
+let previewRequestId = 0;
+
+const syncRangeLabel = (field, label) => {
+    if (!field || !label) return;
+    const refresh = () => {
+        label.textContent = field.value;
+    };
+    field.addEventListener('input', refresh);
+    refresh();
+};
+
+syncRangeLabel(shapeCountField, shapeCountLabel);
+syncRangeLabel(sizeVariationField, sizeVariationLabel);
+syncRangeLabel(densityField, densityLabel);
+syncRangeLabel(lineDensityField, lineDensityLabel);
+syncRangeLabel(brushSizeField, brushSizeLabel);
+
+const resizePreviewCanvas = () => {
+    const rawWidth = Number.parseInt(canvasWidthField.value, 10) || 1120;
+    const rawHeight = Number.parseInt(canvasHeightField.value, 10) || 720;
+    const scale = Math.min(1, 900 / rawWidth);
+    const width = Math.max(360, Math.round(rawWidth * scale));
+    const height = Math.max(240, Math.round(rawHeight * scale));
+
+    previewCanvas.width = width;
+    previewCanvas.height = height;
+    previewStage.style.aspectRatio = `${width} / ${height}`;
+};
+
+const activePalette = () => {
+    const custom = customPaletteField.value
+        .split(',')
+        .map((token) => token.trim())
+        .filter(Boolean);
+    if (custom.length) return custom;
+    return paletteMap[paletteField.value] || paletteMap.sunset;
+};
+
+const syncOverlay = () => {
+    overlayInput.value = JSON.stringify(overlayShapes);
+    overlayCountLabel.textContent = `${overlayShapes.length} accents`;
+};
+
+const renderOverlay = () => {
+    const width = previewCanvas.width;
+    const height = previewCanvas.height;
+    canvasContext.clearRect(0, 0, width, height);
+
+    overlayShapes.forEach((shape) => {
+        const x = shape.x * width;
+        const y = shape.y * height;
+        canvasContext.fillStyle = shape.color;
+        canvasContext.globalAlpha = 0.92;
+
+        if (shape.shape === 'square') {
+            canvasContext.fillRect(x - shape.size / 2, y - shape.size / 2, shape.size, shape.size);
+            return;
+        }
+
+        if (shape.shape === 'triangle') {
+            canvasContext.beginPath();
+            canvasContext.moveTo(x, y - shape.size);
+            canvasContext.lineTo(x - shape.size * 0.85, y + shape.size * 0.65);
+            canvasContext.lineTo(x + shape.size * 0.85, y + shape.size * 0.65);
+            canvasContext.closePath();
+            canvasContext.fill();
+            return;
+        }
+
+        canvasContext.beginPath();
+        canvasContext.arc(x, y, shape.size, 0, Math.PI * 2);
+        canvasContext.fill();
+    });
+
+    canvasContext.globalAlpha = 1;
+};
+
+const updateGenerativeControls = () => {
+    const series = seriesField.value;
+    densityControl.classList.toggle('is-hidden', series === 'kinetic');
+    lineDensityControl.classList.toggle('is-hidden', series !== 'constellation');
+    animationControl.classList.toggle('is-hidden', series !== 'kinetic');
+};
+
+const previewPayload = () => ({
+    series: seriesField.value,
+    palette: paletteField.value,
+    custom_palette: customPaletteField.value,
+    number_of_shapes: shapeCountField.value,
+    size_variation: sizeVariationField.value,
+    density: densityField.value,
+    line_density: lineDensityField.value,
+    canvas_width: canvasWidthField.value,
+    canvas_height: canvasHeightField.value,
+    background: backgroundField.value,
+    seed: seedField.value,
+    animation: animationField.checked,
+    overlay_shapes: overlayShapes
+});
+
+const requestPreview = async () => {
+    const requestId = ++previewRequestId;
+    previewStage.classList.add('is-loading');
+
+    try {
+        const response = await fetch(previewApiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            body: JSON.stringify(previewPayload())
+        });
+        if (!response.ok) return;
+        const payload = await response.json();
+        if (requestId !== previewRequestId) return;
+        if (payload.preview_url) {
+            previewImage.src = payload.preview_url;
+        }
+    } catch (_error) {
+        if (requestId !== previewRequestId) return;
+    } finally {
+        if (requestId === previewRequestId) {
+            previewStage.classList.remove('is-loading');
+        }
+    }
+};
+
+const schedulePreview = () => {
+    clearTimeout(previewTimer);
+    previewTimer = window.setTimeout(requestPreview, 180);
+};
+
+const canvasPosition = (event) => {
+    const rect = previewCanvas.getBoundingClientRect();
+    return {
+        x: (event.clientX - rect.left) / rect.width,
+        y: (event.clientY - rect.top) / rect.height
+    };
+};
+
+const addOverlayShape = (event) => {
+    const position = canvasPosition(event);
+    if (position.x < 0 || position.x > 1 || position.y < 0 || position.y > 1) return;
+
+    const palette = activePalette();
+    overlayShapes.push({
+        shape: brushShapeField.value,
+        x: Number(position.x.toFixed(4)),
+        y: Number(position.y.toFixed(4)),
+        size: Number(brushSizeField.value),
+        color: palette[overlayShapes.length % palette.length]
+    });
+    syncOverlay();
+    renderOverlay();
+};
+
+previewCanvas.addEventListener('pointerdown', (event) => {
+    isDrawing = true;
+    addOverlayShape(event);
+});
+previewCanvas.addEventListener('pointermove', (event) => {
+    if (!isDrawing) return;
+    addOverlayShape(event);
+});
+window.addEventListener('pointerup', () => {
+    isDrawing = false;
+});
+
+document.getElementById('clearOverlayButton').addEventListener('click', () => {
+    overlayShapes = [];
+    syncOverlay();
+    renderOverlay();
+});
+
+document.getElementById('randomSeedButton').addEventListener('click', () => {
+    seedField.value = Math.floor(100000 + Math.random() * 900000);
+    schedulePreview();
+});
+
+[
+    shapeCountField,
+    sizeVariationField,
+    densityField,
+    lineDensityField,
+    seedField,
+    paletteField,
+    customPaletteField,
+    seriesField,
+    backgroundField,
+    animationField,
+    canvasWidthField,
+    canvasHeightField
+].forEach((field) => {
+    field.addEventListener('input', () => {
+        updateGenerativeControls();
+        resizePreviewCanvas();
+        renderOverlay();
+        schedulePreview();
+    });
+    field.addEventListener('change', () => {
+        updateGenerativeControls();
+        resizePreviewCanvas();
+        renderOverlay();
+        schedulePreview();
+    });
+});
+
+[
+    brushShapeField,
+    brushSizeField
+].forEach((field) => {
+    field.addEventListener('input', renderOverlay);
+    field.addEventListener('change', renderOverlay);
+});
+
+resizePreviewCanvas();
+updateGenerativeControls();
+syncOverlay();
+renderOverlay();
+requestPreview();
+</script>
+{% endblock %}

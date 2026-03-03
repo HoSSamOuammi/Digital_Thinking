@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Gallery | Interactive Generative Studio{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <div>
+        <p class="eyebrow">Gallery</p>
+        <h1>Generated archive</h1>
+    </div>
+    <div class="banner-stats">
+        <div>
+            <strong>{{ total_image_count }}</strong>
+            <span>images</span>
+        </div>
+        <div>
+            <strong>{{ total_audio_count }}</strong>
+            <span>audio clips</span>
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <p class="eyebrow">Visual Outputs</p>
+        <h2>Artwork wall</h2>
+    </div>
+
+    {% if generated_images %}
+        <section class="gallery-grid">
+            {% for image in generated_images %}
+                <article class="gallery-card">
+                    <img loading="lazy" src="{{ url_for('static', filename='generated/' ~ image) }}" alt="Generated artwork">
+                    <div class="asset-meta">
+                        <p>{{ image }}</p>
+                        <a class="btn btn-small" href="{{ url_for('download_file', folder='generated', filename=image) }}">Download PNG</a>
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+
+        {% if image_pagination.total_pages > 1 %}
+            <nav class="pager" aria-label="Image pages">
+                {% if image_pagination.has_prev %}
+                    <a class="btn btn-outline btn-small" href="{{ url_for('gallery', image_page=image_pagination.prev_page, audio_page=audio_pagination.page) }}">Previous</a>
+                {% else %}
+                    <span class="pager-spacer"></span>
+                {% endif %}
+                <span class="tiny-note">Images {{ image_pagination.page }} / {{ image_pagination.total_pages }}</span>
+                {% if image_pagination.has_next %}
+                    <a class="btn btn-outline btn-small" href="{{ url_for('gallery', image_page=image_pagination.next_page, audio_page=audio_pagination.page) }}">Next</a>
+                {% else %}
+                    <span class="pager-spacer"></span>
+                {% endif %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <p class="empty-note">No generated images yet.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <p class="eyebrow">Audio Outputs</p>
+        <h2>Playable exports</h2>
+    </div>
+
+    {% if generated_audio %}
+        <section class="audio-grid">
+            {% for clip in generated_audio %}
+                <article class="audio-card">
+                    <p>{{ clip }}</p>
+                    <audio controls src="{{ url_for('static', filename='generated/' ~ clip) }}"></audio>
+                    <a class="btn btn-small" href="{{ url_for('download_file', folder='generated', filename=clip) }}">Download WAV</a>
+                </article>
+            {% endfor %}
+        </section>
+
+        {% if audio_pagination.total_pages > 1 %}
+            <nav class="pager" aria-label="Audio pages">
+                {% if audio_pagination.has_prev %}
+                    <a class="btn btn-outline btn-small" href="{{ url_for('gallery', image_page=image_pagination.page, audio_page=audio_pagination.prev_page) }}">Previous</a>
+                {% else %}
+                    <span class="pager-spacer"></span>
+                {% endif %}
+                <span class="tiny-note">Audio {{ audio_pagination.page }} / {{ audio_pagination.total_pages }}</span>
+                {% if audio_pagination.has_next %}
+                    <a class="btn btn-outline btn-small" href="{{ url_for('gallery', image_page=image_pagination.page, audio_page=audio_pagination.next_page) }}">Next</a>
+                {% else %}
+                    <span class="pager-spacer"></span>
+                {% endif %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <p class="empty-note">No generated audio yet.</p>
+    {% endif %}
+</section>
+{% endblock %}
