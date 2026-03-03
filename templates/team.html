@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Our Team | Interactive Generative Studio{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <div>
+        <p class="eyebrow">Our Team</p>
+        <h1>The four minds behind the studio.</h1>
+    </div>
+    <div class="banner-stats">
+        <!-- <div>
+            <strong>{{ team_members|length }}</strong>
+            <span>team members</span>
+        </div>
+        <div>
+            <strong>4</strong>
+            <span>photo slots ready</span>
+        </div> -->
+    </div>
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <p class="eyebrow">Team Gallery</p>
+        <h2>Meet the Admins</h2>
+    </div>
+
+    <div class="team-grid">
+        {% for member in team_members %}
+            <article class="team-card">
+                {% if member.photo_url %}
+                    <img class="team-avatar" src="{{ member.photo_url }}" alt="{{ member.name }}">
+                {% else %}
+                    <div class="team-avatar team-placeholder" aria-label="{{ member.name }}">
+                        <span>{{ member.name[0] }}</span>
+                    </div>
+                {% endif %}
+                <h3>{{ member.name }}</h3>
+            </article>
+        {% endfor %}
+    </div>
+
+    <p class="tiny-note team-note">
+        Add your images in <code>static/Admins</code> using filenames like
+        <code>hossam.jpg</code>, <code>khadija.png</code>, <code>aya.webp</code>, and <code>abdo.jpeg</code>.
+    </p>
+</section>
+{% endblock %}

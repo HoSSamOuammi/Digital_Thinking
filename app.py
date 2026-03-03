@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_FOLDER = BASE_DIR / "static" / "uploads"
 GENERATED_FOLDER = BASE_DIR / "static" / "generated"
 PREVIEW_FOLDER = GENERATED_FOLDER / "previews"
+ADMINS_FOLDER = BASE_DIR / "static" / "Admins"
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp"}
 AUDIO_EXTENSIONS = {".wav", ".mp3", ".ogg", ".flac", ".m4a"}
@@ -30,6 +31,12 @@ GALLERY_AUDIO_PAGE_SIZE = 8
 PREVIEW_CACHE_LIMIT = 24
 UPLOAD_CACHE_LIMIT = 40
 GENERATED_CACHE_LIMIT = 120
+TEAM_MEMBERS = (
+    ("hossam", "Hossam Ouammi"),
+    ("khadija", "Khadija Baskar"),
+    ("aya", "Aya El Amrani"),
+    ("abdo", "Abderrahmane El Garti"),
+)
 
 
 def _is_truthy_env(name: str) -> bool:
@@ -287,6 +294,29 @@ def _cleanup_directory_files(
         _delete_file_if_exists(path)
 
 
+def _find_named_image(directory: Path, stem: str) -> Optional[str]:
+    for extension in sorted(IMAGE_EXTENSIONS):
+        candidate = directory / f"{stem}{extension}"
+        if candidate.exists() and candidate.is_file():
+            return candidate.name
+    return None
+
+
+def _team_profiles(directory: Path) -> list[dict[str, Optional[str]]]:
+    profiles: list[dict[str, Optional[str]]] = []
+    for slug, display_name in TEAM_MEMBERS:
+        photo_name = _find_named_image(directory, slug)
+        profiles.append(
+            {
+                "slug": slug,
+                "name": display_name,
+                "photo_name": photo_name,
+                "photo_url": url_for("static", filename=f"Admins/{photo_name}") if photo_name else None,
+            }
+        )
+    return profiles
+
+
 def create_app() -> Flask:
     app = Flask(__name__)
     secret_key, generated_secret = _resolve_secret_key()
@@ -295,6 +325,7 @@ def create_app() -> Flask:
     app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
     app.config["GENERATED_FOLDER"] = GENERATED_FOLDER
     app.config["PREVIEW_FOLDER"] = PREVIEW_FOLDER
+    app.config["ADMINS_FOLDER"] = ADMINS_FOLDER
     app.config["MAX_SAVED_UPLOADS"] = UPLOAD_CACHE_LIMIT
     app.config["MAX_SAVED_GENERATED_FILES"] = GENERATED_CACHE_LIMIT
     app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -304,6 +335,7 @@ def create_app() -> Flask:
     app.config["UPLOAD_FOLDER"].mkdir(parents=True, exist_ok=True)
     app.config["GENERATED_FOLDER"].mkdir(parents=True, exist_ok=True)
     app.config["PREVIEW_FOLDER"].mkdir(parents=True, exist_ok=True)
+    app.config["ADMINS_FOLDER"].mkdir(parents=True, exist_ok=True)
 
     if generated_secret:
         app.logger.warning("FLASK_SECRET_KEY is not set; using an ephemeral secret key for this process.")
@@ -362,6 +394,13 @@ def create_app() -> Flask:
             audio_pagination=audio_pagination,
             total_image_count=len(generated_images),
             total_audio_count=len(generated_audio),
+        )
+
+    @app.route("/team")
+    def team():
+        return render_template(
+            "team.html",
+            team_members=_team_profiles(app.config["ADMINS_FOLDER"]),
         )
 
     @app.route("/generative", methods=["GET", "POST"])

@@ -19,15 +19,18 @@ class StudioAppTests(unittest.TestCase):
         self.upload_dir = Path(self.tempdir.name) / "uploads"
         self.generated_dir = Path(self.tempdir.name) / "generated"
         self.preview_dir = self.generated_dir / "previews"
+        self.admins_dir = Path(self.tempdir.name) / "Admins"
         self.upload_dir.mkdir(parents=True, exist_ok=True)
         self.generated_dir.mkdir(parents=True, exist_ok=True)
         self.preview_dir.mkdir(parents=True, exist_ok=True)
+        self.admins_dir.mkdir(parents=True, exist_ok=True)
 
         self.app.config.update(
             TESTING=True,
             UPLOAD_FOLDER=self.upload_dir,
             GENERATED_FOLDER=self.generated_dir,
             PREVIEW_FOLDER=self.preview_dir,
+            ADMINS_FOLDER=self.admins_dir,
         )
         self.client = self.app.test_client()
 
@@ -46,10 +49,22 @@ class StudioAppTests(unittest.TestCase):
         return token
 
     def test_core_pages_render(self):
-        for path in ("/", "/gallery", "/generative", "/data-art", "/media-tools"):
+        for path in ("/", "/gallery", "/team", "/generative", "/data-art", "/media-tools"):
             with self.subTest(path=path):
                 response = self.client.get(path)
                 self.assertEqual(response.status_code, 200)
+
+    def test_team_page_uses_admin_photos_when_present(self):
+        image_bytes = io.BytesIO()
+        Image.new("RGB", (80, 100), color="#7a8f6a").save(image_bytes, format="PNG")
+        (self.admins_dir / "hossam.png").write_bytes(image_bytes.getvalue())
+
+        response = self.client.get("/team")
+        self.assertEqual(response.status_code, 200)
+        body = response.get_data(as_text=True)
+        self.assertIn("Hossam", body)
+        self.assertIn("Khadija", body)
+        self.assertIn("Admins/hossam.png", body)
 
     def test_generative_post_creates_artwork_and_keeps_overlay_state(self):
         response = self.client.post(
