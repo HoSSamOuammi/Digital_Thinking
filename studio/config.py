@@ -20,3 +20,25 @@ PREVIEW_CACHE_LIMIT = 24
 UPLOAD_CACHE_LIMIT = 40
 GENERATED_CACHE_LIMIT = 120
 
+TEAM_MEMBERS = (
+    {
+        "slug": "aya",
+        "name": "Aya EL Amrani",
+        "email": "ElAamrani.aya@etu.uae.ac.ma",
+        "role": "Interface et expérience utilisateur",
+    },
+    {
+        "slug": "khadija",
+        "name": "Khadija Baskar",
+        "email": "Baskar.Khadija@etu.uae.ac.ma",
+        "role": "Contenus, formulaires et traduction",
+    },
+    {
+        "slug": "hossam",
+        "name": "Hossam OUammi",
+        "email": "Ouammi.hossam@etu.uae.ac.ma",
+        "role": "Intégration Flask et médias",
+    },
+    {
+        "slug": "abdo",
+        "name": "Abderrahmane El Garti",
