@@ -13,3 +13,10 @@ from studio.security import init_csrf
 
 def create_app() -> Flask:
     app = Flask(
+        __name__,
+        template_folder=str(BASE_DIR / "templates"),
+        static_folder=str(BASE_DIR / "static"),
+    )
+
+    generated_secret = configure_app(app)
+    ensure_project_folders(app)
