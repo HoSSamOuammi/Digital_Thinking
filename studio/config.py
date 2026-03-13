@@ -42,3 +42,25 @@ TEAM_MEMBERS = (
     {
         "slug": "abdo",
         "name": "Abderrahmane El Garti",
+        "email": "ElGarti.abderrahmane@etu.uae.ac.ma",
+        "role": "Tests, galerie et documentation",
+    },
+)
+
+
+def is_truthy_env(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def resolve_secret_key() -> tuple[str, bool]:
+    configured_key = os.getenv("FLASK_SECRET_KEY", "").strip()
+    if configured_key:
+        return configured_key, False
+    return secrets.token_hex(32), True
+
+
+def debug_is_enabled() -> bool:
+    return os.getenv("FLASK_DEBUG", "0").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def configure_app(app) -> bool:
