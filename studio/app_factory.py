@@ -20,3 +20,10 @@ def create_app() -> Flask:
 
     generated_secret = configure_app(app)
     ensure_project_folders(app)
+    init_csrf(app)
+
+    if generated_secret:
+        app.logger.warning("FLASK_SECRET_KEY is not set; using an ephemeral secret key for this process.")
+
+    @app.context_processor
+    def inject_project_name():
