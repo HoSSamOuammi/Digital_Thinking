@@ -8,3 +8,8 @@ SERIES_LABELS = {
 
 BACKGROUND_LABELS = {
     "aurora": "Aurore douce",
+    "paper": "Papier clair",
+    "night": "Nuit contrastée",
+}
+
+PALETTE_LABELS = {
