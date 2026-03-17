@@ -41,3 +41,25 @@ Le nouveau design est plus simple :
 
 - grille claire ;
 - cartes sobres ;
+- boutons plats ;
+- couleurs modérées ;
+- meilleure lisibilité.
+
+### 4. Tests liés à l’ancienne structure
+
+Certains tests utilisaient des chemins de patch comme `app.create_generative_art`. Après la séparation des routes, ces chemins devaient pointer vers les nouveaux modules.
+
+Les tests ont été mis à jour sans réduire la couverture.
+
+## Architecture finale
+
+### Couche 1 : point d’entrée
+
+`app.py` reste très court. Il sert seulement à créer et lancer l’application.
+
+### Couche 2 : création de l’application
+
+`studio/app_factory.py` crée l’application Flask, charge la configuration, active la sécurité CSRF et enregistre les routes.
+
+### Couche 3 : routes
+
