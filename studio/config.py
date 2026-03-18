@@ -64,3 +64,25 @@ def debug_is_enabled() -> bool:
 
 
 def configure_app(app) -> bool:
+    secret_key, generated_secret = resolve_secret_key()
+
+    app.config["SECRET_KEY"] = secret_key
+    app.config["MAX_CONTENT_LENGTH"] = 30 * 1024 * 1024
+    app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+    app.config["GENERATED_FOLDER"] = GENERATED_FOLDER
+    app.config["PREVIEW_FOLDER"] = PREVIEW_FOLDER
+    app.config["ADMINS_FOLDER"] = ADMINS_FOLDER
+    app.config["MAX_SAVED_UPLOADS"] = UPLOAD_CACHE_LIMIT
+    app.config["MAX_SAVED_GENERATED_FILES"] = GENERATED_CACHE_LIMIT
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["SESSION_COOKIE_SECURE"] = is_truthy_env("FLASK_SESSION_SECURE")
+
+    return generated_secret
+
+
+def ensure_project_folders(app) -> None:
+    app.config["UPLOAD_FOLDER"].mkdir(parents=True, exist_ok=True)
+    app.config["GENERATED_FOLDER"].mkdir(parents=True, exist_ok=True)
+    app.config["PREVIEW_FOLDER"].mkdir(parents=True, exist_ok=True)
+    app.config["ADMINS_FOLDER"].mkdir(parents=True, exist_ok=True)
