@@ -27,3 +27,10 @@ def create_app() -> Flask:
 
     @app.context_processor
     def inject_project_name():
+        return {"app_name": APP_NAME}
+
+    register_page_routes(app)
+    register_generative_routes(app)
+    register_data_routes(app)
+    register_media_routes(app)
+    return app
