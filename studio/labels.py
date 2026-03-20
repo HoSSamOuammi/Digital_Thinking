@@ -13,3 +13,8 @@ BACKGROUND_LABELS = {
 }
 
 PALETTE_LABELS = {
+    "electric": "Électrique",
+    "festival": "Festival",
+    "forest": "Forêt",
+    "mono": "Monochrome",
+    "ocean": "Océan",
