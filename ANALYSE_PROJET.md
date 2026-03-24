@@ -63,3 +63,24 @@ Les tests ont été mis à jour sans réduire la couverture.
 
 ### Couche 3 : routes
 
+Les routes sont séparées par usage :
+
+- `pages.py` : accueil, équipe, galerie, téléchargement ;
+- `generative_routes.py` : atelier génératif et prévisualisation ;
+- `data_routes.py` : visualisation de données ;
+- `media_routes.py` : image et audio.
+
+Chaque fichier reste plus facile à lire qu’un grand fichier central.
+
+### Couche 4 : services simples
+
+Les fichiers suivants évitent la répétition :
+
+- `forms.py` : convertir et valider les valeurs des formulaires ;
+- `storage.py` : sauvegarder, lister, paginer et nettoyer les fichiers ;
+- `security.py` : gérer le jeton CSRF ;
+- `labels.py` : centraliser les libellés français ;
+- `team.py` : préparer les profils des membres.
+
+### Couche 5 : modules métier
+
