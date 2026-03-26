@@ -25,3 +25,30 @@ def coerce_optional_int(
     if raw_value is None or str(raw_value).strip() == "":
         return default
     try:
+        value = int(str(raw_value).strip())
+    except (TypeError, ValueError):
+        return default
+    return max(minimum, min(maximum, value))
+
+
+def coerce_float(raw_value: Any, default: float, minimum: float, maximum: float) -> float:
+    try:
+        value = float(raw_value)
+    except (TypeError, ValueError):
+        return default
+    return max(minimum, min(maximum, value))
+
+
+def coerce_bool(raw_value: Any, default: bool = False) -> bool:
+    if raw_value is None:
+        return default
+    if isinstance(raw_value, bool):
+        return raw_value
+    return str(raw_value).strip().lower() in {"1", "true", "yes", "on"}
+
+
+def parse_overlay_shapes(raw_value: Any) -> list[dict]:
+    if not raw_value:
+        return []
+    if isinstance(raw_value, list):
+        return raw_value
