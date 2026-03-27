@@ -18,3 +18,8 @@ PALETTE_LABELS = {
     "forest": "Forêt",
     "mono": "Monochrome",
     "ocean": "Océan",
+    "sunset": "Coucher de soleil",
+}
+
+DATA_STYLE_LABELS = {
+    "all": "Vue complète",
