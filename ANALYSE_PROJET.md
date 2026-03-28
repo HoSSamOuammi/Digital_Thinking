@@ -84,3 +84,25 @@ Les fichiers suivants évitent la répétition :
 
 ### Couche 5 : modules métier
 
+Le dossier `modules/` garde les traitements principaux :
+
+- génération artistique ;
+- visualisation de données ;
+- traitement d’image ;
+- traitement audio.
+
+Cette séparation est importante : les routes Flask ne devraient pas contenir les algorithmes artistiques eux-mêmes.
+
+## Pourquoi cette version est plus adaptée au niveau étudiant
+
+Le projet évite les abstractions trop avancées. Il n’utilise pas de base de données, de système d’authentification ou de framework frontend complexe.
+
+Les choix sont simples à expliquer :
+
+- une fonction pour créer l’application ;
+- un fichier par groupe de routes ;
+- un fichier pour les formulaires ;
+- un fichier pour les fichiers ;
+- des modules métier séparés.
+
+Cela montre une bonne organisation sans donner l’impression d’un projet trop sophistiqué.
