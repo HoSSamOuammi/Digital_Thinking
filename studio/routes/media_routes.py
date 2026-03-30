@@ -25,3 +25,29 @@ def register_media_routes(app) -> None:
 
         if request.method == "POST":
             active_panel = request.form.get("panel", "image")
+            if active_panel == "image":
+                image_params = read_image_params(request.form, image_effects)
+                processed_image = _process_image(app, image_params, kmeans_available)
+            elif active_panel == "audio":
+                audio_params = read_audio_params(request.form)
+                processed_audio = _process_audio(app, audio_params, audio_available, audio_status)
+
+        return render_template(
+            "media_tools.html",
+            processed_image=processed_image,
+            processed_audio=processed_audio,
+            audio_available=audio_available,
+            audio_status=audio_status,
+            active_panel=active_panel,
+            image_effects=image_effects,
+            image_effect_labels=IMAGE_EFFECT_LABELS,
+            audio_operations=AUDIO_OPERATIONS,
+            audio_operation_labels=AUDIO_OPERATION_LABELS,
+            image_params=image_params,
+            audio_params=audio_params,
+            kmeans_available=kmeans_available,
+        )
+
+
+def _process_image(app, image_params: dict, kmeans_available: bool) -> str | None:
+    image_name = save_uploaded_file(
