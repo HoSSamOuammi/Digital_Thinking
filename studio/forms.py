@@ -52,3 +52,29 @@ def parse_overlay_shapes(raw_value: Any) -> list[dict]:
         return []
     if isinstance(raw_value, list):
         return raw_value
+    try:
+        payload = json.loads(raw_value)
+    except (TypeError, json.JSONDecodeError):
+        return []
+    return payload if isinstance(payload, list) else []
+
+
+def default_generative_params() -> dict[str, Any]:
+    return {
+        "series": "constellation",
+        "palette": "sunset",
+        "custom_palette": "",
+        "number_of_shapes": 140,
+        "size_variation": 1.0,
+        "density": 0.9,
+        "line_density": 1.0,
+        "canvas_width": 1120,
+        "canvas_height": 720,
+        "background": "aurora",
+        "seed": "",
+        "animation": True,
+    }
+
+
+def read_generative_params(
+    source: Mapping[str, Any],
