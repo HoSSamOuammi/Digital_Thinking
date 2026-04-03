@@ -23,3 +23,8 @@ PALETTE_LABELS = {
 
 DATA_STYLE_LABELS = {
     "all": "Vue complète",
+    "landscape": "Paysage",
+    "heatmap": "Carte thermique",
+    "gradient": "Barres graduées",
+    "radial": "Rayonnement circulaire",
+}
