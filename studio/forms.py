@@ -78,3 +78,30 @@ def default_generative_params() -> dict[str, Any]:
 
 def read_generative_params(
     source: Mapping[str, Any],
+    *,
+    seed_default: Optional[int],
+) -> tuple[dict[str, Any], list[dict], Optional[int]]:
+    params = default_generative_params()
+
+    params["series"] = str(source.get("series", params["series"])).strip().lower()
+    if params["series"] not in SERIES_INFO:
+        params["series"] = "constellation"
+
+    params["palette"] = str(source.get("palette", params["palette"])).strip().lower()
+    if params["palette"] not in PALETTES:
+        params["palette"] = "sunset"
+
+    params["custom_palette"] = str(source.get("custom_palette", "")).strip()
+    params["number_of_shapes"] = coerce_int(source.get("number_of_shapes"), 140, 20, 900)
+    params["size_variation"] = coerce_float(source.get("size_variation"), 1.0, 0.4, 2.6)
+    params["density"] = coerce_float(source.get("density"), 0.9, 0.2, 1.8)
+    params["line_density"] = coerce_float(source.get("line_density"), 1.0, 0.4, 2.0)
+    params["canvas_width"] = coerce_int(source.get("canvas_width"), 1120, 360, 2400)
+    params["canvas_height"] = coerce_int(source.get("canvas_height"), 720, 280, 1800)
+
+    params["background"] = str(source.get("background", params["background"])).strip().lower()
+    if params["background"] not in BACKGROUND_STYLES:
+        params["background"] = "aurora"
+
+    params["animation"] = coerce_bool(source.get("animation"), default=True)
+    params["seed"] = str(source.get("seed", "")).strip()
