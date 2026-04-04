@@ -51,3 +51,30 @@ def register_media_routes(app) -> None:
 
 def _process_image(app, image_params: dict, kmeans_available: bool) -> str | None:
     image_name = save_uploaded_file(
+        file_storage=request.files.get("image_file"),
+        target_dir=app.config["UPLOAD_FOLDER"],
+        allowed_extensions=IMAGE_EXTENSIONS,
+    )
+    if not image_name:
+        flash("Veuillez importer une image valide.", "error")
+        return None
+
+    source_path = app.config["UPLOAD_FOLDER"] / image_name
+    try:
+        if image_params["image_effect"] == "kmeans_palette":
+            if not kmeans_available:
+                raise RuntimeError("K-Means palette extraction is unavailable on this environment.")
+            filename = kmeans_color_palette(
+                input_path=source_path,
+                output_dir=app.config["GENERATED_FOLDER"],
+                n_colors=image_params["kmeans_colors"],
+            )
+        else:
+            filename = apply_image_filter(
+                input_path=source_path,
+                effect=image_params["image_effect"],
+                output_dir=app.config["GENERATED_FOLDER"],
+                rotate_degrees=image_params["rotate_degrees"],
+                pixel_size=image_params["pixel_size"],
+                glitch_shift=image_params["glitch_shift"],
+            )
