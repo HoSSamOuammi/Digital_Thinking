@@ -106,3 +106,24 @@ Les choix sont simples à expliquer :
 - des modules métier séparés.
 
 Cela montre une bonne organisation sans donner l’impression d’un projet trop sophistiqué.
+
+## Parcours utilisateur
+
+### Accueil
+
+La page d’accueil sert de tableau de bord avec quelques compteurs et des accès rapides.
+
+### Atelier génératif
+
+L’utilisateur choisit les paramètres puis génère un visuel. La prévisualisation permet de vérifier rapidement le rendu.
+
+### Données
+
+L’utilisateur peut importer un CSV ou utiliser les données de démonstration. Le résultat est exporté en image.
+
+### Médias
+
+L’utilisateur peut importer une image et appliquer un effet. L’audio est proposé seulement si l’environnement le permet.
+
+### Galerie
+
