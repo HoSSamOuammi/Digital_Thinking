@@ -78,3 +78,29 @@ def _process_image(app, image_params: dict, kmeans_available: bool) -> str | Non
                 pixel_size=image_params["pixel_size"],
                 glitch_shift=image_params["glitch_shift"],
             )
+        _cleanup_media_folders(app)
+        flash("Image traitée avec succès.", "success")
+        return filename
+    except Exception:  # pragma: no cover - defensive path
+        app.logger.exception("Image processing failed.")
+        flash("Le traitement de l’image a échoué.", "error")
+        return None
+    finally:
+        delete_file_if_exists(source_path)
+        _cleanup_upload_folder(app)
+
+
+def _process_audio(app, audio_params: dict, audio_available: bool, audio_status: dict) -> str | None:
+    if not audio_available:
+        flash(f"Les outils audio sont désactivés. {audio_status['reason']}", "error")
+        return None
+
+    audio_name = save_uploaded_file(
+        file_storage=request.files.get("audio_file"),
+        target_dir=app.config["UPLOAD_FOLDER"],
+        allowed_extensions=AUDIO_EXTENSIONS,
+    )
+    if not audio_name:
+        flash("Veuillez importer un fichier audio valide.", "error")
+        return None
+
