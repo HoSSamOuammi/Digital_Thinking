@@ -28,3 +28,8 @@ DATA_STYLE_LABELS = {
     "gradient": "Barres graduées",
     "radial": "Rayonnement circulaire",
 }
+
+IMAGE_EFFECT_LABELS = {
+    "grayscale": "Noir et blanc",
+    "sepia": "Sépia",
+    "invert": "Inversion",
