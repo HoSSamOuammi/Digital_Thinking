@@ -105,3 +105,29 @@ def read_generative_params(
 
     params["animation"] = coerce_bool(source.get("animation"), default=True)
     params["seed"] = str(source.get("seed", "")).strip()
+
+    overlay_shapes = parse_overlay_shapes(source.get("overlay_shapes"))
+    seed_value = coerce_optional_int(params["seed"], seed_default, 1, 9_999_999)
+    params["seed"] = str(seed_value) if seed_value is not None else ""
+    return params, overlay_shapes, seed_value
+
+
+def default_data_params() -> dict[str, Any]:
+    return {
+        "data_style": "all",
+        "focus_column": "auto",
+        "colormap": COLORMAP_OPTIONS[0],
+        "smoothing_window": 8,
+    }
+
+
+def read_data_params(source: Mapping[str, Any]) -> dict[str, Any]:
+    params = default_data_params()
+
+    params["data_style"] = str(source.get("data_style", "all")).strip().lower()
+    if params["data_style"] not in DATA_ART_STYLES:
+        params["data_style"] = "all"
+
+    params["focus_column"] = str(source.get("focus_column", "auto")).strip()
+    params["colormap"] = str(source.get("colormap", COLORMAP_OPTIONS[0])).strip()
+    if params["colormap"] not in COLORMAP_OPTIONS:
