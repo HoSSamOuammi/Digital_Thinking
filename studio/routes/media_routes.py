@@ -104,3 +104,30 @@ def _process_audio(app, audio_params: dict, audio_available: bool, audio_status:
         flash("Veuillez importer un fichier audio valide.", "error")
         return None
 
+    audio_path = app.config["UPLOAD_FOLDER"] / audio_name
+    merge_path = _save_optional_merge_file(app)
+    try:
+        filename = process_audio(
+            input_path=audio_path,
+            output_dir=app.config["GENERATED_FOLDER"],
+            operation=audio_params["audio_operation"],
+            speed=audio_params["speed_factor"],
+            echo_delay=audio_params["echo_delay"],
+            merge_path=merge_path,
+            pitch_steps=audio_params["pitch_steps"],
+            fade_duration=audio_params["fade_duration"],
+        )
+        _cleanup_media_folders(app)
+        flash("Audio traité avec succès.", "success")
+        return filename
+    except Exception:  # pragma: no cover - defensive path
+        app.logger.exception("Audio processing failed.")
+        flash("Le traitement audio a échoué.", "error")
+        return None
+    finally:
+        delete_file_if_exists(audio_path)
+        delete_file_if_exists(merge_path)
+        _cleanup_upload_folder(app)
+
+
+def _save_optional_merge_file(app):
