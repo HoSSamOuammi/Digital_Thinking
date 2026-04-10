@@ -127,3 +127,25 @@ L’utilisateur peut importer une image et appliquer un effet. L’audio est pro
 
 ### Galerie
 
+Les fichiers générés sont listés avec pagination et téléchargement.
+
+## Répartition en quatre parties
+
+### Aya EL Amrani
+
+Travail sur la structure Flask :
+
+- extraction de la configuration ;
+- extraction des formulaires ;
+- extraction du stockage ;
+- séparation des routes.
+
+### Khadija Baskar
+
+Travail sur la langue et les contenus :
+
+- libellés français centralisés ;
+- traduction des templates ;
+- correction des messages visibles ;
+- respect des accents.
+
