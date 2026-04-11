@@ -131,3 +131,30 @@ def read_data_params(source: Mapping[str, Any]) -> dict[str, Any]:
     params["focus_column"] = str(source.get("focus_column", "auto")).strip()
     params["colormap"] = str(source.get("colormap", COLORMAP_OPTIONS[0])).strip()
     if params["colormap"] not in COLORMAP_OPTIONS:
+        params["colormap"] = COLORMAP_OPTIONS[0]
+
+    params["smoothing_window"] = coerce_int(source.get("smoothing_window", "8"), 8, 1, 30)
+    return params
+
+
+def default_image_params() -> dict[str, Any]:
+    return {
+        "image_effect": "neon",
+        "rotate_degrees": 45,
+        "pixel_size": 8,
+        "kmeans_colors": 5,
+        "glitch_shift": 16,
+    }
+
+
+def read_image_params(source: Mapping[str, Any], available_effects: Mapping[str, str]) -> dict[str, Any]:
+    params = default_image_params()
+    fallback_effect = next(iter(available_effects), "grayscale")
+
+    params["image_effect"] = str(source.get("image_effect", "neon")).strip().lower()
+    if params["image_effect"] not in available_effects:
+        params["image_effect"] = fallback_effect
+
+    params["rotate_degrees"] = coerce_int(source.get("rotate_degrees", "45"), 45, -360, 360)
+    params["pixel_size"] = coerce_int(source.get("pixel_size", "8"), 8, 2, 40)
+    params["kmeans_colors"] = coerce_int(source.get("kmeans_colors", "5"), 5, 2, 10)
