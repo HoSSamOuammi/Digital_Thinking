@@ -33,3 +33,8 @@ IMAGE_EFFECT_LABELS = {
     "grayscale": "Noir et blanc",
     "sepia": "Sépia",
     "invert": "Inversion",
+    "blur": "Flou",
+    "edge": "Contours",
+    "pixelate": "Pixelisation",
+    "mirror": "Miroir",
+    "rotate": "Rotation",
