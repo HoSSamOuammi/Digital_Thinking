@@ -131,3 +131,29 @@ def _process_audio(app, audio_params: dict, audio_available: bool, audio_status:
 
 
 def _save_optional_merge_file(app):
+    merge_file = request.files.get("merge_file")
+    if not merge_file or not merge_file.filename:
+        return None
+
+    merge_name = save_uploaded_file(
+        file_storage=merge_file,
+        target_dir=app.config["UPLOAD_FOLDER"],
+        allowed_extensions=AUDIO_EXTENSIONS,
+    )
+    return app.config["UPLOAD_FOLDER"] / merge_name if merge_name else None
+
+
+def _cleanup_media_folders(app) -> None:
+    cleanup_directory_files(
+        app.config["GENERATED_FOLDER"],
+        keep=app.config["MAX_SAVED_GENERATED_FILES"],
+        allowed_extensions=IMAGE_EXTENSIONS | AUDIO_EXTENSIONS,
+    )
+
+
+def _cleanup_upload_folder(app) -> None:
+    cleanup_directory_files(
+        app.config["UPLOAD_FOLDER"],
+        keep=app.config["MAX_SAVED_UPLOADS"],
+        allowed_extensions=IMAGE_EXTENSIONS | AUDIO_EXTENSIONS | DATA_EXTENSIONS,
+    )
