@@ -149,3 +149,24 @@ Travail sur la langue et les contenus :
 - correction des messages visibles ;
 - respect des accents.
 
+### Hossam OUammi
+
+Travail sur l’interface :
+
+- passage à un style administratif ;
+- réduction des effets décoratifs ;
+- navigation plus sobre ;
+- amélioration de la lisibilité.
+
+### Abderrahmane El Garti
+
+Travail sur la qualité :
+
+- adaptation des tests ;
+- vérification de la suite ;
+- documentation ;
+- analyse finale.
+
+## Conclusion
+
+La version finale garde l’idée créative du projet, mais elle est plus propre à expliquer. Le code est séparé, l’interface est en français, le style est plus administratif et les tests confirment que les parcours principaux fonctionnent.
