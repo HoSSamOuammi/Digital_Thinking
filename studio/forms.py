@@ -158,3 +158,29 @@ def read_image_params(source: Mapping[str, Any], available_effects: Mapping[str,
     params["rotate_degrees"] = coerce_int(source.get("rotate_degrees", "45"), 45, -360, 360)
     params["pixel_size"] = coerce_int(source.get("pixel_size", "8"), 8, 2, 40)
     params["kmeans_colors"] = coerce_int(source.get("kmeans_colors", "5"), 5, 2, 10)
+    params["glitch_shift"] = coerce_int(source.get("glitch_shift", "16"), 16, 4, 48)
+    return params
+
+
+def default_audio_params() -> dict[str, Any]:
+    return {
+        "audio_operation": "reverse",
+        "speed_factor": 1.25,
+        "echo_delay": 180,
+        "pitch_steps": 4,
+        "fade_duration": 900,
+    }
+
+
+def read_audio_params(source: Mapping[str, Any]) -> dict[str, Any]:
+    params = default_audio_params()
+
+    params["audio_operation"] = str(source.get("audio_operation", "reverse")).strip().lower()
+    if params["audio_operation"] not in AUDIO_OPERATIONS:
+        params["audio_operation"] = "reverse"
+
+    params["speed_factor"] = coerce_float(source.get("speed_factor", "1.25"), 1.25, 0.5, 2.5)
+    params["echo_delay"] = coerce_int(source.get("echo_delay", "180"), 180, 50, 2000)
+    params["pitch_steps"] = coerce_int(source.get("pitch_steps", "4"), 4, -12, 12)
+    params["fade_duration"] = coerce_int(source.get("fade_duration", "900"), 900, 100, 6000)
+    return params
