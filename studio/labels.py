@@ -38,3 +38,8 @@ IMAGE_EFFECT_LABELS = {
     "pixelate": "Pixelisation",
     "mirror": "Miroir",
     "rotate": "Rotation",
+    "neon": "Néon",
+    "glitch": "Glitch",
+    "watercolor": "Aquarelle",
+    "contour": "Tracé graphique",
+    "kmeans_palette": "Palette dominante",
