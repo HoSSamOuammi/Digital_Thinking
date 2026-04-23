@@ -11,3 +11,10 @@ from studio.storage import find_named_image
 def build_team_profiles(directory: Path) -> list[dict[str, str | None]]:
     profiles: list[dict[str, str | None]] = []
 
+    for member in TEAM_MEMBERS:
+        photo_name = find_named_image(directory, member["slug"], IMAGE_EXTENSIONS)
+        profiles.append(
+            {
+                "slug": member["slug"],
+                "name": member["name"],
+                "email": member["email"],
