@@ -43,3 +43,8 @@ IMAGE_EFFECT_LABELS = {
     "watercolor": "Aquarelle",
     "contour": "Tracé graphique",
     "kmeans_palette": "Palette dominante",
+}
+
+AUDIO_OPERATION_LABELS = {
+    "reverse": "Inverser",
+    "speed": "Vitesse",
