@@ -28,3 +28,32 @@ def delete_file_if_exists(path: Optional[Path]) -> None:
     try:
         path.unlink(missing_ok=True)
     except OSError:
+        return
+
+
+def list_generated_files(directory: Path, image_extensions: set[str], audio_extensions: set[str]) -> tuple[list[str], list[str]]:
+    images: list[str] = []
+    audios: list[str] = []
+    items: list[tuple[float, str, str]] = []
+
+    for path in directory.glob("*"):
+        if not path.is_file():
+            continue
+        try:
+            items.append((path.stat().st_mtime, path.name, path.suffix.lower()))
+        except OSError:
+            continue
+
+    items.sort(key=lambda item: item[0], reverse=True)
+    for _, name, extension in items:
+        if extension in image_extensions:
+            images.append(name)
+        elif extension in audio_extensions:
+            audios.append(name)
+    return images, audios
+
+
+def paginate_items(items: list[str], page: int, per_page: int) -> dict[str, int | bool | list[str]]:
+    total_items = len(items)
+    total_pages = max(1, (total_items + per_page - 1) // per_page)
+    safe_page = max(1, min(total_pages, page))
