@@ -18,3 +18,9 @@ def build_team_profiles(directory: Path) -> list[dict[str, str | None]]:
                 "slug": member["slug"],
                 "name": member["name"],
                 "email": member["email"],
+                "role": member["role"],
+                "photo_name": photo_name,
+                "photo_url": url_for("static", filename=f"Admins/{photo_name}") if photo_name else None,
+            }
+        )
+    return profiles
