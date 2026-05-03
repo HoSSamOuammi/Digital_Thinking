@@ -48,3 +48,8 @@ IMAGE_EFFECT_LABELS = {
 AUDIO_OPERATION_LABELS = {
     "reverse": "Inverser",
     "speed": "Vitesse",
+    "echo": "Écho",
+    "merge": "Fusionner",
+    "pitch": "Hauteur",
+    "fade": "Fondu",
+}
