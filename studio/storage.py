@@ -87,3 +87,32 @@ def cleanup_directory_files(
     *,
     keep: int,
     allowed_extensions: Optional[set[str]] = None,
+) -> None:
+    if keep < 1:
+        return
+
+    files = []
+    for path in directory.glob("*"):
+        if not path.is_file():
+            continue
+        if allowed_extensions and path.suffix.lower() not in allowed_extensions:
+            continue
+        try:
+            files.append((path.stat().st_mtime, path))
+        except OSError:
+            continue
+
+    if len(files) <= keep:
+        return
+
+    files.sort(key=lambda item: item[0], reverse=True)
+    for _, path in files[keep:]:
+        delete_file_if_exists(path)
+
+
+def find_named_image(directory: Path, stem: str, image_extensions: set[str]) -> Optional[str]:
+    for extension in sorted(image_extensions):
+        candidate = directory / f"{stem}{extension}"
+        if candidate.exists() and candidate.is_file():
+            return candidate.name
+    return None
