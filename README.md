@@ -53,3 +53,30 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python app.py
+```
+
+Ouvrir ensuite :
+
+```text
+http://127.0.0.1:5000/
+```
+
+## Tests
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+## Répartition du travail
+
+- Aya EL Amrani : séparation de l’architecture Flask.
+- Khadija Baskar : libellés français et traduction de l’interface.
+- Hossam OUammi : design administratif et intégration visuelle.
+- Abderrahmane El Garti : tests, analyse et documentation.
+
+## Notes techniques
+
+- Les fichiers générés sont enregistrés dans `static/generated`.
+- Les fichiers importés temporairement sont nettoyés après traitement.
+- Le traitement audio dépend de `pydub` et de `ffmpeg`.
+- L’application garde une logique volontairement simple : pas de base de données, pas d’authentification, pas d’API complexe.
