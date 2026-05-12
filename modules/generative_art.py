@@ -25,15 +25,15 @@ PALETTES: dict[str, list[str]] = {
 }
 
 SERIES_INFO: dict[str, str] = {
-    "constellation": "A star-field of connected points, nebula clouds, and luminous trails.",
-    "mosaic": "A tile-based composition built from rectangles, triangles, and striped cells.",
-    "kinetic": "An object-oriented scene of moving shapes rendered with layered motion trails.",
+    "constellation": "Nuage de points reliés avec des traits lumineux.",
+    "mosaic": "Composition géométrique à base de tuiles, rectangles et triangles.",
+    "kinetic": "Scène orientée objet avec formes mobiles et traces superposées.",
 }
 
 BACKGROUND_STYLES: dict[str, str] = {
-    "aurora": "Soft gradient atmosphere with luminous blooms.",
-    "paper": "Warm editorial background with subtle grain.",
-    "night": "Dark backdrop with spectral texture and higher contrast.",
+    "aurora": "Fond doux avec dégradé et lumière légère.",
+    "paper": "Fond clair inspiré du papier.",
+    "night": "Fond sombre avec contraste plus fort.",
 }
 
 ALLOWED_SHAPES = {"circle", "square", "triangle"}
