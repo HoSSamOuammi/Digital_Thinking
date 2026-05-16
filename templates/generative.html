@@ -1,20 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Generative Lab | Interactive Generative Studio{% endblock %}
+{% block title %}Atelier génératif | {{ app_name }}{% endblock %}
 
 {% block content %}
 <section class="page-banner">
     <div>
-        <p class="eyebrow">Generative Lab</p>
-        <h1>Generate and preview side by side.</h1>
+        <p class="eyebrow">Atelier génératif</p>
+        <h1>Générer et prévisualiser</h1>
     </div>
     <div class="banner-stats">
         <div>
             <strong>3</strong>
-            <span>art styles</span>
+            <span>styles visuels</span>
         </div>
         <div>
             <strong>{{ overlay_shape_count }}</strong>
-            <span>drawn accents</span>
+            <span>formes ajoutées</span>
         </div>
     </div>
 </section>
@@ -25,23 +25,23 @@
         <input type="hidden" name="overlay_shapes" id="overlayShapesInput" value='{{ overlay_shapes|tojson }}'>
 
         <div class="section-heading">
-            <p class="eyebrow">Controls</p>
-            <h2>Generation settings</h2>
+            <p class="eyebrow">Réglages</p>
+            <h2>Paramètres de génération</h2>
         </div>
 
         <div class="field-grid">
-            <label>Artwork Series
+            <label>Série visuelle
                 <select name="series" id="seriesField">
                     {% for series_name in series_info.keys() %}
-                        <option value="{{ series_name }}" {% if params.series == series_name %}selected{% endif %}>{{ series_name|capitalize }}</option>
+                        <option value="{{ series_name }}" {% if params.series == series_name %}selected{% endif %}>{{ series_labels.get(series_name, series_name) }}</option>
                     {% endfor %}
                 </select>
             </label>
 
-            <label>Background
+            <label>Fond
                 <select name="background" id="backgroundField">
                     {% for background_name in background_styles.keys() %}
-                        <option value="{{ background_name }}" {% if params.background == background_name %}selected{% endif %}>{{ background_name|capitalize }}</option>
+                        <option value="{{ background_name }}" {% if params.background == background_name %}selected{% endif %}>{{ background_labels.get(background_name, background_name) }}</option>
                     {% endfor %}
                 </select>
             </label>
@@ -50,105 +50,105 @@
         <label>Palette
             <select name="palette" id="paletteField">
                 {% for palette in palette_names %}
-                    <option value="{{ palette }}" {% if params.palette == palette %}selected{% endif %}>{{ palette|capitalize }}</option>
+                    <option value="{{ palette }}" {% if params.palette == palette %}selected{% endif %}>{{ palette_labels.get(palette, palette) }}</option>
                 {% endfor %}
             </select>
         </label>
 
-        <label>Custom Palette
+        <label>Palette personnalisée
             <input type="text" name="custom_palette" id="customPaletteField" value="{{ params.custom_palette }}" placeholder="#f25c54, #f7b267, #0b4f6c">
         </label>
 
         <div class="field-grid">
-            <label>Seed
+            <label>Graine
                 <div class="inline-action">
-                    <input type="number" name="seed" id="seedField" value="{{ params.seed }}" placeholder="Optional seed">
-                    <button class="btn btn-ghost" type="button" id="randomSeedButton">Randomize</button>
+                    <input type="number" name="seed" id="seedField" value="{{ params.seed }}" placeholder="Optionnel">
+                    <button class="btn btn-ghost" type="button" id="randomSeedButton">Aléatoire</button>
                 </div>
             </label>
 
             <label class="checkbox-label compact-checkbox control-group" id="animationControl">
                 <input type="checkbox" name="animation" id="animationField" {% if params.animation %}checked{% endif %}>
-                Enable kinetic trails
+                Activer les traces cinétiques
             </label>
         </div>
 
-        <label>Number of Shapes <span class="range-value" id="shapeCountLabel">{{ params.number_of_shapes }}</span>
+        <label>Nombre de formes <span class="range-value" id="shapeCountLabel">{{ params.number_of_shapes }}</span>
             <input type="range" min="20" max="900" step="10" value="{{ params.number_of_shapes }}" name="number_of_shapes" id="shapeCountField">
         </label>
 
-        <label>Size Variation <span class="range-value" id="sizeVariationLabel">{{ params.size_variation }}</span>
+        <label>Variation de taille <span class="range-value" id="sizeVariationLabel">{{ params.size_variation }}</span>
             <input type="range" min="0.4" max="2.6" step="0.1" value="{{ params.size_variation }}" name="size_variation" id="sizeVariationField">
         </label>
 
-        <label class="control-group" id="densityControl">Density <span class="range-value" id="densityLabel">{{ params.density }}</span>
+        <label class="control-group" id="densityControl">Densité <span class="range-value" id="densityLabel">{{ params.density }}</span>
             <input type="range" min="0.2" max="1.8" step="0.1" value="{{ params.density }}" name="density" id="densityField">
         </label>
 
-        <label class="control-group" id="lineDensityControl">Line Detail <span class="range-value" id="lineDensityLabel">{{ params.line_density }}</span>
+        <label class="control-group" id="lineDensityControl">Détail des lignes <span class="range-value" id="lineDensityLabel">{{ params.line_density }}</span>
             <input type="range" min="0.4" max="2.0" step="0.1" value="{{ params.line_density }}" name="line_density" id="lineDensityField">
         </label>
 
         <div class="field-grid">
-            <label>Canvas Width
+            <label>Largeur du canevas
                 <input type="number" name="canvas_width" id="canvasWidthField" min="360" max="2400" value="{{ params.canvas_width }}">
             </label>
-            <label>Canvas Height
+            <label>Hauteur du canevas
                 <input type="number" name="canvas_height" id="canvasHeightField" min="280" max="1800" value="{{ params.canvas_height }}">
             </label>
         </div>
 
-        <button type="submit" class="btn">Generate Artwork</button>
+        <button type="submit" class="btn">Générer le visuel</button>
     </form>
 
     <section class="panel output-panel">
         <div class="section-heading">
-            <p class="eyebrow">Live Preview</p>
-            <h2>Preview</h2>
+            <p class="eyebrow">Prévisualisation</p>
+            <h2>Aperçu</h2>
         </div>
 
         <div class="interactive-panel preview-panel">
             <div class="section-heading inline-heading">
-                <h3>Canvas</h3>
-                <span class="tiny-note" id="overlayCountLabel">{{ overlay_shape_count }} accents</span>
+                <h3>Canevas</h3>
+                <span class="tiny-note" id="overlayCountLabel">{{ overlay_shape_count }} formes</span>
             </div>
 
             <div class="preview-stage" id="previewStage">
-                <img id="previewImage" alt="Live preview render">
-                <canvas id="previewBoard" aria-label="Interactive artwork overlay"></canvas>
+                <img id="previewImage" alt="Prévisualisation du visuel">
+                <canvas id="previewBoard" aria-label="Zone de dessin interactive"></canvas>
             </div>
 
             <div class="field-grid preview-brush-grid">
-                <label>Brush Shape
+                <label>Forme du pinceau
                     <select id="brushShapeField">
-                        <option value="circle">Circle</option>
-                        <option value="square">Square</option>
+                        <option value="circle">Cercle</option>
+                        <option value="square">Carré</option>
                         <option value="triangle">Triangle</option>
                     </select>
                 </label>
-                <label>Brush Size <span class="range-value" id="brushSizeLabel">24</span>
+                <label>Taille du pinceau <span class="range-value" id="brushSizeLabel">24</span>
                     <input type="range" min="8" max="64" step="2" value="24" id="brushSizeField">
                 </label>
             </div>
 
             <div class="hero-actions">
-                <button class="btn btn-outline" type="button" id="clearOverlayButton">Clear overlay</button>
+                <button class="btn btn-outline" type="button" id="clearOverlayButton">Effacer les formes</button>
             </div>
         </div>
 
         <div class="section-heading preview-output-heading">
-            <p class="eyebrow">Output</p>
-            <h2>Rendered Artwork</h2>
+            <p class="eyebrow">Résultat</p>
+            <h2>Visuel rendu</h2>
         </div>
 
         {% if generated_image %}
-            <img class="preview" src="{{ url_for('static', filename='generated/' ~ generated_image) }}" alt="Generated artwork">
+            <img class="preview" src="{{ url_for('static', filename='generated/' ~ generated_image) }}" alt="Visuel généré">
             <div class="hero-actions">
-                <a class="btn btn-outline" href="{{ url_for('download_file', folder='generated', filename=generated_image) }}">Download PNG</a>
-                <a class="btn btn-ghost" href="{{ url_for('gallery') }}">View in gallery</a>
+                <a class="btn btn-outline" href="{{ url_for('download_file', folder='generated', filename=generated_image) }}">Télécharger PNG</a>
+                <a class="btn btn-ghost" href="{{ url_for('gallery') }}">Voir dans la galerie</a>
             </div>
         {% else %}
-            <p class="empty-note">Generate an artwork to export it.</p>
+            <p class="empty-note">Générez un visuel pour l’exporter.</p>
         {% endif %}
     </section>
 </section>
@@ -235,7 +235,7 @@ const activePalette = () => {
 
 const syncOverlay = () => {
     overlayInput.value = JSON.stringify(overlayShapes);
-    overlayCountLabel.textContent = `${overlayShapes.length} accents`;
+    overlayCountLabel.textContent = `${overlayShapes.length} formes`;
 };
 
 const renderOverlay = () => {
