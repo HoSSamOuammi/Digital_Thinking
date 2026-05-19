@@ -13,11 +13,11 @@ import numpy as np
 import pandas as pd
 
 DATA_ART_STYLES: dict[str, str] = {
-    "all": "Composite poster showing every artistic transformation.",
-    "landscape": "Wave-like terrain generated from smoothed data.",
-    "heatmap": "Textured pattern built from rolling numeric values.",
-    "gradient": "Expressive bar field with dynamic colors.",
-    "radial": "Circular bloom that turns a series into a rhythmic burst.",
+    "all": "Affiche composée avec toutes les représentations.",
+    "landscape": "Paysage abstrait généré à partir de données lissées.",
+    "heatmap": "Motif coloré construit avec les valeurs numériques.",
+    "gradient": "Barres colorées selon l’évolution des valeurs.",
+    "radial": "Forme circulaire construite autour d’une série.",
 }
 
 COLORMAP_OPTIONS = ("magma", "viridis", "cividis", "plasma", "cubehelix")
