@@ -1,20 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Media Tools | Interactive Generative Studio{% endblock %}
+{% block title %}Outils médias | {{ app_name }}{% endblock %}
 
 {% block content %}
 <section class="page-banner">
     <div>
-        <p class="eyebrow">Media Tools</p>
-        <h1>Process images or audio.</h1>
+        <p class="eyebrow">Outils médias</p>
+        <h1>Traiter les fichiers</h1>
     </div>
     <div class="banner-stats">
         <div>
             <strong>{{ image_effects|length }}</strong>
-            <span>image effects</span>
+            <span>effets image</span>
         </div>
         <div>
             <strong>{{ audio_operations|length if audio_available else 0 }}</strong>
-            <span>audio operations</span>
+            <span>opérations audio</span>
         </div>
     </div>
 </section>
@@ -25,57 +25,57 @@
         <input type="hidden" name="panel" value="image">
 
         <div class="section-heading">
-            <p class="eyebrow">Image Lab</p>
-            <h2>Upload and transform</h2>
+            <p class="eyebrow">Image</p>
+            <h2>Importer et transformer</h2>
         </div>
 
-        <label>Image File
+        <label>Fichier image
             <input type="file" name="image_file" accept="image/*" required>
         </label>
 
-        <label>Effect
+        <label>Effet
             <select name="image_effect" id="imageEffectField">
                 {% for effect_name, description in image_effects.items() %}
-                    <option value="{{ effect_name }}" {% if image_params.image_effect == effect_name %}selected{% endif %}>{{ effect_name|replace('_', ' ')|title }}</option>
+                    <option value="{{ effect_name }}" {% if image_params.image_effect == effect_name %}selected{% endif %}>{{ image_effect_labels.get(effect_name, effect_name) }}</option>
                 {% endfor %}
             </select>
         </label>
 
         {% if not kmeans_available %}
-            <p class="tiny-note capability-note">K-Means palette extraction is disabled on this environment.</p>
+            <p class="tiny-note capability-note">L’extraction de palette K-Means est désactivée dans cet environnement.</p>
         {% endif %}
 
         <div class="field-grid control-group" data-image-control="rotate">
-            <label>Rotate Degrees
+            <label>Degrés de rotation
                 <input type="number" name="rotate_degrees" value="{{ image_params.rotate_degrees }}" min="-360" max="360">
             </label>
         </div>
 
         <div class="field-grid control-group" data-image-control="pixelate">
-            <label>Pixel Block Size
+            <label>Taille des pixels
                 <input type="number" name="pixel_size" value="{{ image_params.pixel_size }}" min="2" max="40">
             </label>
         </div>
 
         {% if kmeans_available %}
             <div class="field-grid control-group" data-image-control="kmeans_palette">
-                <label>K-Means Colors
+                <label>Couleurs K-Means
                     <input type="number" name="kmeans_colors" value="{{ image_params.kmeans_colors }}" min="2" max="10">
                 </label>
             </div>
         {% endif %}
 
         <div class="field-grid control-group" data-image-control="glitch">
-            <label>Glitch Shift
+            <label>Décalage glitch
                 <input type="number" name="glitch_shift" value="{{ image_params.glitch_shift }}" min="4" max="48">
             </label>
         </div>
 
-        <button type="submit" class="btn">Apply Image Effect</button>
+        <button type="submit" class="btn">Appliquer l’effet image</button>
 
         {% if processed_image %}
-            <img class="preview" src="{{ url_for('static', filename='generated/' ~ processed_image) }}" alt="Processed image">
-            <a class="btn btn-outline" href="{{ url_for('download_file', folder='generated', filename=processed_image) }}">Download Image</a>
+            <img class="preview" src="{{ url_for('static', filename='generated/' ~ processed_image) }}" alt="Image traitée">
+            <a class="btn btn-outline" href="{{ url_for('download_file', folder='generated', filename=processed_image) }}">Télécharger l’image</a>
         {% endif %}
     </form>
 
@@ -84,62 +84,62 @@
         <input type="hidden" name="panel" value="audio">
 
         <div class="section-heading">
-            <p class="eyebrow">Audio Lab</p>
-            <h2>Optional sound design</h2>
+            <p class="eyebrow">Audio</p>
+            <h2>Traitement sonore</h2>
         </div>
 
         {% if audio_available %}
-            <label>Primary Audio File
+            <label>Fichier audio principal
                 <input type="file" name="audio_file" accept="audio/*" required>
             </label>
 
-            <label>Operation
+            <label>Opération
                 <select name="audio_operation" id="audioOperationField">
                     {% for operation_name, description in audio_operations.items() %}
-                        <option value="{{ operation_name }}" {% if audio_params.audio_operation == operation_name %}selected{% endif %}>{{ operation_name|replace('_', ' ')|title }}</option>
+                        <option value="{{ operation_name }}" {% if audio_params.audio_operation == operation_name %}selected{% endif %}>{{ audio_operation_labels.get(operation_name, operation_name) }}</option>
                     {% endfor %}
                 </select>
             </label>
 
-            <label class="control-group" data-audio-control="merge">Merge Clip
+            <label class="control-group" data-audio-control="merge">Fichier à fusionner
                 <input type="file" name="merge_file" accept="audio/*">
             </label>
 
             <div class="field-grid control-group" data-audio-control="speed">
-                <label>Speed Factor
+                <label>Facteur de vitesse
                     <input type="number" name="speed_factor" value="{{ audio_params.speed_factor }}" step="0.05" min="0.5" max="2.5">
                 </label>
             </div>
 
             <div class="field-grid control-group" data-audio-control="echo">
-                <label>Echo Delay (ms)
+                <label>Délai de l’écho (ms)
                     <input type="number" name="echo_delay" value="{{ audio_params.echo_delay }}" min="50" max="2000">
                 </label>
             </div>
 
             <div class="field-grid control-group" data-audio-control="pitch">
-                <label>Pitch Steps
+                <label>Hauteur
                     <input type="number" name="pitch_steps" value="{{ audio_params.pitch_steps }}" min="-12" max="12">
                 </label>
             </div>
 
             <div class="field-grid control-group" data-audio-control="fade">
-                <label>Fade Duration (ms)
+                <label>Durée du fondu (ms)
                     <input type="number" name="fade_duration" value="{{ audio_params.fade_duration }}" min="100" max="6000">
                 </label>
             </div>
 
-            <button type="submit" class="btn">Apply Audio Effect</button>
+            <button type="submit" class="btn">Appliquer l’effet audio</button>
 
             {% if processed_audio %}
                 <div class="meta-box">
                     <p>{{ processed_audio }}</p>
                     <audio controls src="{{ url_for('static', filename='generated/' ~ processed_audio) }}"></audio>
-                    <a class="btn btn-outline" href="{{ url_for('download_file', folder='generated', filename=processed_audio) }}">Download Audio</a>
+                    <a class="btn btn-outline" href="{{ url_for('download_file', folder='generated', filename=processed_audio) }}">Télécharger l’audio</a>
                 </div>
             {% endif %}
         {% else %}
-            <p class="empty-note">Audio tools are disabled. {{ audio_status.reason }}</p>
+            <p class="empty-note">Les outils audio sont désactivés. {{ audio_status.reason }}</p>
         {% endif %}
     </form>
 </section>
