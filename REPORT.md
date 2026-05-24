@@ -31,3 +31,36 @@ Cette organisation évite que toute la logique soit concentrée dans un seul fic
 ## 3. Interface
 
 L’interface a été retravaillée en français avec des accents corrects. Le style visuel est devenu plus administratif :
+
+- fond clair ;
+- navigation simple ;
+- cartes sobres ;
+- boutons sans effets exagérés ;
+- rayon de bordure réduit ;
+- couleurs neutres avec quelques accents bleu, vert et orange.
+
+Le résultat est plus proche d’un outil de projet étudiant que d’une page promotionnelle.
+
+## 4. Fonctionnalités
+
+### Atelier génératif
+
+L’utilisateur choisit une série, une palette, un fond, une graine, une taille de canevas et plusieurs paramètres visuels.
+
+Trois séries sont disponibles :
+
+- constellation ;
+- mosaïque ;
+- cinétique.
+
+### Données visuelles
+
+Le module accepte un CSV ou utilise un jeu de données de démonstration. Les données numériques sont nettoyées, lissées et transformées en image.
+
+### Outils médias
+
+Le module image applique des effets comme noir et blanc, sépia, contours, glitch, rotation ou palette dominante.
+
+Le module audio reste optionnel, car il dépend de `ffmpeg`.
+
+### Galerie
