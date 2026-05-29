@@ -1,12 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Interactive Generative Studio{% endblock %}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -14,17 +11,17 @@
 
     <header class="topbar">
         <a class="brandmark" href="{{ url_for('home') }}">
-            <span class="brandmark-label">Interactive</span>
-            <strong>Generative Studio</strong>
+            <span class="brandmark-label">Projet étudiant</span>
+            <strong>{{ app_name }}</strong>
         </a>
 
-        <nav class="nav-links" aria-label="Primary navigation">
-            <a class="{% if request.endpoint == 'home' %}is-active{% endif %}" href="{{ url_for('home') }}">Home</a>
-            <a class="{% if request.endpoint == 'team' %}is-active{% endif %}" href="{{ url_for('team') }}">Our Team</a>
-            <a class="{% if request.endpoint == 'generative' %}is-active{% endif %}" href="{{ url_for('generative') }}">Generative Lab</a>
-            <a class="{% if request.endpoint == 'data_art' %}is-active{% endif %}" href="{{ url_for('data_art') }}">Data Art</a>
-            <a class="{% if request.endpoint == 'media_tools' %}is-active{% endif %}" href="{{ url_for('media_tools') }}">Media Tools</a>
-            <a class="{% if request.endpoint == 'gallery' %}is-active{% endif %}" href="{{ url_for('gallery') }}">Gallery</a>
+        <nav class="nav-links" aria-label="Navigation principale">
+            <a class="{% if request.endpoint == 'home' %}is-active{% endif %}" {% if request.endpoint == 'home' %}aria-current="page"{% endif %} href="{{ url_for('home') }}">Accueil</a>
+            <a class="{% if request.endpoint == 'team' %}is-active{% endif %}" {% if request.endpoint == 'team' %}aria-current="page"{% endif %} href="{{ url_for('team') }}">Équipe</a>
+            <a class="{% if request.endpoint == 'generative' %}is-active{% endif %}" {% if request.endpoint == 'generative' %}aria-current="page"{% endif %} href="{{ url_for('generative') }}">Génératif</a>
+            <a class="{% if request.endpoint == 'data_art' %}is-active{% endif %}" {% if request.endpoint == 'data_art' %}aria-current="page"{% endif %} href="{{ url_for('data_art') }}">Données</a>
+            <a class="{% if request.endpoint == 'media_tools' %}is-active{% endif %}" {% if request.endpoint == 'media_tools' %}aria-current="page"{% endif %} href="{{ url_for('media_tools') }}">Médias</a>
+            <a class="{% if request.endpoint == 'gallery' %}is-active{% endif %}" {% if request.endpoint == 'gallery' %}aria-current="page"{% endif %} href="{{ url_for('gallery') }}">Galerie</a>
         </nav>
     </header>
 
@@ -43,8 +40,8 @@
     </main>
 
     <footer class="footer">
-        <p>Flask creative studio aligned with the Interactive Generative Studio term project brief.</p>
-        <p>Modules: generative art, data-driven visuals, image or audio processing, gallery delivery.</p>
+        <p>Projet Flask réalisé pour le module de créativité numérique.</p>
+        <p>Modules : art génératif, visualisation de données, traitement média et galerie.</p>
     </footer>
 
     {% block scripts %}{% endblock %}
