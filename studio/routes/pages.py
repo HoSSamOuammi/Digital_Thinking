@@ -48,3 +48,53 @@ def register_page_routes(app) -> None:
             total_audio_count=len(generated_audio),
         )
 
+    @app.route("/team")
+    def team():
+        return render_template(
+            "team.html",
+            team_members=build_team_profiles(app.config["ADMINS_FOLDER"]),
+        )
+
+    @app.route("/upload", methods=["GET", "POST"])
+    def upload():
+        if request.method == "POST":
+            allowed_extensions = IMAGE_EXTENSIONS | AUDIO_EXTENSIONS | DATA_EXTENSIONS
+            saved_name = save_uploaded_file(
+                file_storage=request.files.get("file"),
+                target_dir=app.config["UPLOAD_FOLDER"],
+                allowed_extensions=allowed_extensions,
+            )
+            if saved_name:
+                cleanup_directory_files(
+                    app.config["UPLOAD_FOLDER"],
+                    keep=app.config["MAX_SAVED_UPLOADS"],
+                    allowed_extensions=allowed_extensions,
+                )
+                flash(f"Fichier importé : {saved_name}", "success")
+            else:
+                flash("Import impossible. Le fichier est absent ou non compatible.", "error")
+        return redirect(url_for("media_tools"))
+
+    @app.route("/download/<folder>/<path:filename>")
+    def download_file(folder: str, filename: str):
+        directories = {
+            "generated": app.config["GENERATED_FOLDER"],
+            "uploads": app.config["UPLOAD_FOLDER"],
+        }
+        if folder not in directories:
+            abort(404)
+
+        safe_name = Path(filename).name
+        target = directories[folder] / safe_name
+        if not target.exists():
+            abort(404)
+
+        return send_from_directory(directories[folder], safe_name, as_attachment=True)
+
+
+def _generated_files(app) -> tuple[list[str], list[str]]:
+    return list_generated_files(
+        app.config["GENERATED_FOLDER"],
+        image_extensions=IMAGE_EXTENSIONS,
+        audio_extensions=AUDIO_EXTENSIONS,
+    )
