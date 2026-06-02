@@ -64,3 +64,36 @@ Le module image applique des effets comme noir et blanc, sépia, contours, glitc
 Le module audio reste optionnel, car il dépend de `ffmpeg`.
 
 ### Galerie
+
+La galerie liste les images et fichiers audio générés avec une pagination simple et des liens de téléchargement.
+
+## 5. Tests
+
+Les tests vérifient :
+
+- le rendu des pages principales ;
+- la génération d’un visuel ;
+- l’API de prévisualisation ;
+- la création d’une visualisation de données ;
+- le traitement d’image ;
+- la pagination de la galerie ;
+- la protection CSRF ;
+- le nettoyage des fichiers temporaires.
+
+Commande utilisée :
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+## 6. Limites assumées
+
+Le projet reste volontairement simple :
+
+- pas de comptes utilisateurs ;
+- pas de base de données ;
+- pas de stockage permanent avancé ;
+- pas de système de rôles ;
+- pas de dépendance lourde côté frontend.
+
+Ces limites sont cohérentes avec un projet scolaire : l’objectif est de montrer la compréhension de Flask, des formulaires, des fichiers, de la génération visuelle et de l’organisation du code.
