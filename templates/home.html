@@ -1,67 +1,67 @@
 {% extends "base.html" %}
-{% block title %}Home | Interactive Generative Studio{% endblock %}
+{% block title %}Accueil | {{ app_name }}{% endblock %}
 
 {% block content %}
 <section class="hero-grid">
     <article class="hero-copy panel panel-hero">
-        <p class="eyebrow">Term Project Studio</p>
-        <h1>Create, transform, and export digital artwork.</h1>
+        <p class="eyebrow">Tableau de bord</p>
+        <h1>Suivi du studio numérique</h1>
         <div class="hero-actions">
-            <a class="btn" href="{{ url_for('generative') }}">Open Generative Lab</a>
-            <a class="btn btn-outline" href="{{ url_for('gallery') }}">Browse Gallery</a>
+            <a class="btn" href="{{ url_for('generative') }}">Ouvrir l’atelier</a>
+            <a class="btn btn-outline" href="{{ url_for('gallery') }}">Voir la galerie</a>
         </div>
     </article>
 
     <aside class="insight-stack">
         <article class="metric-card">
-            <p>Generated images</p>
+            <p>Images générées</p>
             <h2>{{ image_count }}</h2>
-            <span>Saved to <code>static/generated</code></span>
+            <span>Enregistrées dans <code>static/generated</code></span>
         </article>
         <article class="metric-card">
-            <p>Generated audio</p>
+            <p>Fichiers audio</p>
             <h2>{{ audio_count }}</h2>
-            <span>Playable directly from the gallery</span>
+            <span>Consultables depuis la galerie</span>
         </article>
         <article class="metric-card">
-            <p>Palette systems</p>
+            <p>Palettes disponibles</p>
             <h2>{{ palette_names|length }}</h2>
-            <span>Built-in plus custom palette strings</span>
+            <span>Palettes intégrées et personnalisées</span>
         </article>
     </aside>
 </section>
 
 <section class="module-grid">
     <article class="feature-card accent-a">
-        <h2>Generative Lab</h2>
-        <a href="{{ url_for('generative') }}">Enter lab</a>
+        <h2>Atelier génératif</h2>
+        <a href="{{ url_for('generative') }}">Créer un visuel</a>
     </article>
     <article class="feature-card accent-b">
-        <h2>Data Art</h2>
-        <a href="{{ url_for('data_art') }}">Build visualization</a>
+        <h2>Données visuelles</h2>
+        <a href="{{ url_for('data_art') }}">Créer une visualisation</a>
     </article>
     <article class="feature-card accent-c">
-        <h2>Media Tools</h2>
-        <a href="{{ url_for('media_tools') }}">Open toolset</a>
+        <h2>Outils médias</h2>
+        <a href="{{ url_for('media_tools') }}">Traiter un fichier</a>
     </article>
 </section>
 
 <section class="panel">
     <div class="section-heading">
-        <p class="eyebrow">Recent Output</p>
-        <h2>Latest exported artworks</h2>
+        <p class="eyebrow">Sorties récentes</p>
+        <h2>Derniers visuels exportés</h2>
     </div>
 
     {% if featured_images %}
         <div class="preview-strip">
             {% for image in featured_images %}
                 <a class="preview-thumb" href="{{ url_for('gallery') }}">
-                    <img loading="lazy" src="{{ url_for('static', filename='generated/' ~ image) }}" alt="Recent generated artwork">
+                    <img loading="lazy" src="{{ url_for('static', filename='generated/' ~ image) }}" alt="Visuel généré récemment">
                 </a>
             {% endfor %}
         </div>
     {% else %}
-        <p class="empty-note">No generated artwork yet. Start from the generative lab or data art module.</p>
+        <p class="empty-note">Aucun visuel généré pour le moment.</p>
     {% endif %}
 </section>
 {% endblock %}
