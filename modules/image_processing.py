@@ -14,19 +14,19 @@ except Exception:  # pragma: no cover - optional dependency safeguard
     KMeans = None
 
 IMAGE_EFFECTS: dict[str, str] = {
-    "grayscale": "Classic monochrome conversion.",
-    "sepia": "Warm cinematic color treatment.",
-    "invert": "Invert the full color range.",
-    "blur": "Soft atmospheric blur.",
-    "edge": "Edge detection with high contrast lines.",
-    "pixelate": "Blocky retro pixel treatment.",
-    "mirror": "Horizontal mirrored reflection.",
-    "rotate": "Rotates and reframes the image.",
-    "neon": "Saturated base with glowing edge accents.",
-    "glitch": "RGB channel displacement with digital offsets.",
-    "watercolor": "Painterly smoothing and posterization.",
-    "contour": "Contour overlay for graphic outlines.",
-    "kmeans_palette": "Dominant color extraction using K-Means.",
+    "grayscale": "Conversion simple en noir et blanc.",
+    "sepia": "Teinte chaude de type photo ancienne.",
+    "invert": "Inversion des couleurs de l’image.",
+    "blur": "Flou léger.",
+    "edge": "Détection des contours.",
+    "pixelate": "Effet pixelisé.",
+    "mirror": "Miroir horizontal.",
+    "rotate": "Rotation de l’image.",
+    "neon": "Couleurs saturées avec contours lumineux.",
+    "glitch": "Décalage des canaux de couleur.",
+    "watercolor": "Rendu adouci de type aquarelle.",
+    "contour": "Tracé graphique des contours.",
+    "kmeans_palette": "Extraction des couleurs dominantes avec K-Means.",
 }
 
 
