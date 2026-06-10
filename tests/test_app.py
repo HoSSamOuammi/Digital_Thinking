@@ -165,7 +165,7 @@ class StudioAppTests(unittest.TestCase):
         self.assertIn("Audio 2 / 2", body)
 
     def test_media_tools_reports_audio_unavailable_reason(self):
-        with patch("app.get_audio_status", return_value={"available": False, "reason": "ffmpeg missing"}):
+        with patch("studio.routes.media_routes.get_audio_status", return_value={"available": False, "reason": "ffmpeg missing"}):
             response = self.client.get("/media-tools")
         self.assertEqual(response.status_code, 200)
         self.assertIn("ffmpeg missing", response.get_data(as_text=True))
@@ -173,7 +173,7 @@ class StudioAppTests(unittest.TestCase):
     def test_form_posts_require_csrf_token(self):
         response = self.client.post("/generative", data={}, follow_redirects=True)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("The request could not be verified", response.get_data(as_text=True))
+        self.assertIn("La requête n’a pas pu être vérifiée", response.get_data(as_text=True))
 
     def test_preview_api_requires_csrf_token(self):
         response = self.client.post("/api/generative-preview", json={"series": "mosaic"})
@@ -181,14 +181,14 @@ class StudioAppTests(unittest.TestCase):
         self.assertIn("error", response.get_json())
 
     def test_generative_failures_do_not_expose_internal_exception_details(self):
-        with patch("app.create_generative_art", side_effect=RuntimeError("sensitive-debug-detail")):
+        with patch("studio.routes.generative_routes.create_generative_art", side_effect=RuntimeError("sensitive-debug-detail")):
             response = self.client.post(
                 "/generative",
                 data={"csrf_token": self._csrf_token()},
             )
         self.assertEqual(response.status_code, 200)
         body = response.get_data(as_text=True)
-        self.assertIn("Could not generate artwork right now.", body)
+        self.assertIn("Le visuel n’a pas pu être généré pour le moment.", body)
         self.assertNotIn("sensitive-debug-detail", body)
 
     def test_uploaded_dataset_is_removed_after_processing(self):
