@@ -12,12 +12,12 @@ except Exception:  # pragma: no cover - optional dependency safeguard
     which = None
 
 AUDIO_OPERATIONS: dict[str, str] = {
-    "reverse": "Reverse the clip from end to start.",
-    "speed": "Speed up or slow down the waveform.",
-    "echo": "Layer delayed repetitions over the original clip.",
-    "merge": "Append a second clip with a short crossfade.",
-    "pitch": "Shift the perceived pitch by semitone steps.",
-    "fade": "Apply fade in and fade out envelopes.",
+    "reverse": "Lire le son de la fin vers le début.",
+    "speed": "Accélérer ou ralentir le son.",
+    "echo": "Ajouter des répétitions avec délai.",
+    "merge": "Fusionner deux fichiers audio.",
+    "pitch": "Modifier la hauteur du son.",
+    "fade": "Ajouter un fondu au début et à la fin.",
 }
 MAX_AUDIO_DURATION_MS = 5 * 60 * 1000
 
@@ -26,7 +26,7 @@ def get_audio_status() -> dict[str, str | bool]:
     if AudioSegment is None or which is None:
         return {
             "available": False,
-            "reason": "PyDub is not installed.",
+            "reason": "PyDub n’est pas installé.",
         }
 
     converter_name = Path(getattr(AudioSegment, "converter", "ffmpeg")).name or "ffmpeg"
@@ -34,12 +34,12 @@ def get_audio_status() -> dict[str, str | bool]:
     if not converter_path:
         return {
             "available": False,
-            "reason": "ffmpeg is not available in PATH.",
+            "reason": "ffmpeg n’est pas disponible dans le PATH.",
         }
 
     return {
         "available": True,
-        "reason": "Audio processing is ready.",
+        "reason": "Le traitement audio est prêt.",
         "converter": converter_path,
     }
 
