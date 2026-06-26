@@ -70,7 +70,7 @@ python -m unittest discover -s tests -v
 
 - Code complet : dépôt GitHub avec `app.py`, `studio/`, `modules/`, `templates/`, `static/` et `tests/`.
 - Application Flask fonctionnelle : lancement avec `python app.py`.
-- Rapport final de 2-3 pages : `docs/rapport_technique/rapport_technique.pdf`.
+- Rapport technique détaillé illustré : `docs/rapport_technique/rapport_technique.pdf`.
 - Version Markdown du rapport : `docs/rapport_technique/rapport_technique.md`.
 
 ## Répartition du travail

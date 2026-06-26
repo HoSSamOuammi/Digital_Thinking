@@ -70,7 +70,7 @@ Travail sur les tests, la documentation, le rapport et l’analyse technique.
 - L’application se lance avec `python app.py`.
 - Les dépendances sont listées dans `requirements.txt`.
 - Le README contient les étapes d’installation et de test.
-- Le rapport final respecte la limite de 2-3 pages.
+- Le rapport final présente le projet en détail avec captures, équipe, pipeline et suivi Git.
 - Les photos de l’équipe sont chargées automatiquement depuis `static/Admins`.
 - La suite `unittest` valide les parcours principaux.
 
