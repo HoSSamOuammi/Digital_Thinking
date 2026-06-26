@@ -67,6 +67,13 @@ http://127.0.0.1:5000/
 python -m unittest discover -s tests -v
 ```
 
+## Livrables finaux
+
+- Code complet : depot GitHub avec `app.py`, `studio/`, `modules/`, `templates/`, `static/` et `tests/`.
+- Application Flask : lancee avec `python app.py`.
+- Rapport final 2-3 pages : `docs/rapport_technique/rapport_technique.pdf`.
+- Version Markdown du rapport : `docs/rapport_technique/rapport_technique.md`.
+
 ## Répartition du travail
 
 - Aya EL Amrani : séparation de l’architecture Flask.
