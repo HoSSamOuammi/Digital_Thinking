@@ -19,9 +19,10 @@ L’idée n’était pas de construire une plateforme trop lourde, mais un proje
 interactive-generative-studio/
 |-- app.py
 |-- README.md
-|-- REPORT.md
-|-- ANALYSE_PROJET.md
 |-- requirements.txt
+|-- docs/
+|   `-- rapport_technique/
+|       `-- rapport_technique.pdf
 |-- studio/
 |   |-- app_factory.py
 |   |-- config.py
@@ -71,7 +72,6 @@ python -m unittest discover -s tests -v
 - Code complet : dépôt GitHub avec `app.py`, `studio/`, `modules/`, `templates/`, `static/` et `tests/`.
 - Application Flask fonctionnelle : lancement avec `python app.py`.
 - Rapport technique détaillé illustré : `docs/rapport_technique/rapport_technique.pdf`.
-- Version Markdown du rapport : `docs/rapport_technique/rapport_technique.md`.
 
 ## Répartition du travail
 
