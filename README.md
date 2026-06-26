@@ -1,20 +1,19 @@
 # Studio génératif interactif
 
-Application Flask réalisée pour un projet étudiant de créativité numérique.
+Application Flask réalisée pour le module de créativité numérique. Le projet prend la forme d’un petit studio web où l’on peut générer des visuels, transformer des données, appliquer des effets à une image et retrouver les exports dans une galerie.
 
-Le projet permet de :
+L’idée n’était pas de construire une plateforme trop lourde, mais un projet propre, présentable et facile à expliquer à l’oral. On a donc gardé une architecture simple, avec des fichiers séparés par rôle au lieu d’un seul gros `app.py`.
 
-- générer des visuels artistiques avec des paramètres simples ;
-- transformer un jeu de données CSV en visualisation ;
-- appliquer des effets à une image ;
-- traiter un fichier audio quand `ffmpeg` est disponible ;
-- consulter et télécharger les fichiers produits depuis une galerie.
+## Ce que fait l’application
 
-## Objectif
+- générer des compositions visuelles à partir de paramètres réglables ;
+- convertir un fichier CSV, ou un jeu de données de démonstration, en visualisation ;
+- appliquer des effets à une image importée ;
+- proposer quelques traitements audio lorsque `ffmpeg` est disponible ;
+- afficher les fichiers produits dans une galerie avec téléchargement ;
+- présenter les membres du groupe et leur rôle.
 
-L’objectif n’est pas de produire une application très avancée, mais un projet clair, présentable et facile à expliquer.
-
-La structure a donc été retravaillée pour éviter un gros fichier unique. Le code est maintenant séparé en petites couches :
+## Organisation du code
 
 ```text
 interactive-generative-studio/
@@ -46,7 +45,7 @@ interactive-generative-studio/
 `-- tests/
 ```
 
-## Lancement
+## Installation et lancement
 
 ```powershell
 python -m venv .venv
@@ -69,21 +68,21 @@ python -m unittest discover -s tests -v
 
 ## Livrables finaux
 
-- Code complet : depot GitHub avec `app.py`, `studio/`, `modules/`, `templates/`, `static/` et `tests/`.
-- Application Flask : lancee avec `python app.py`.
-- Rapport final 2-3 pages : `docs/rapport_technique/rapport_technique.pdf`.
+- Code complet : dépôt GitHub avec `app.py`, `studio/`, `modules/`, `templates/`, `static/` et `tests/`.
+- Application Flask fonctionnelle : lancement avec `python app.py`.
+- Rapport final de 2-3 pages : `docs/rapport_technique/rapport_technique.pdf`.
 - Version Markdown du rapport : `docs/rapport_technique/rapport_technique.md`.
 
 ## Répartition du travail
 
-- Aya EL Amrani : séparation de l’architecture Flask.
-- Khadija Baskar : libellés français et traduction de l’interface.
-- Hossam OUammi : design administratif et intégration visuelle.
-- Abderrahmane El Garti : tests, analyse et documentation.
+- Aya EL Amrani : structure Flask, configuration, formulaires, stockage et routes.
+- Khadija Baskar : textes français, libellés, cohérence des intitulés et contenus visibles.
+- Hossam OUammi : intégration Flask, interface, pages de présentation, médias et galerie.
+- Abderrahmane El Garti : tests fonctionnels, documentation, rapport et analyse technique.
 
 ## Notes techniques
 
-- Les fichiers générés sont enregistrés dans `static/generated`.
+- Les exports sont enregistrés dans `static/generated`.
 - Les fichiers importés temporairement sont nettoyés après traitement.
-- Le traitement audio dépend de `pydub` et de `ffmpeg`.
-- L’application garde une logique volontairement simple : pas de base de données, pas d’authentification, pas d’API complexe.
+- Le module audio dépend de `pydub` et de `ffmpeg`; l’application reste utilisable si l’audio n’est pas disponible.
+- Le projet n’utilise ni base de données ni authentification, volontairement, pour rester lisible dans un cadre scolaire.

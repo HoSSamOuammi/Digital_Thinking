@@ -2,171 +2,78 @@
 
 ## Résumé
 
-Le projet avait déjà une base fonctionnelle : les pages existaient, les modules de génération étaient présents et les tests couvraient les principaux parcours.
+La base du projet fonctionnait déjà: les pages existaient, les modules produisaient des résultats et les tests validaient les grands parcours. Le vrai sujet était ailleurs. Le code avait besoin d’être plus lisible, et l’interface devait donner une impression de projet terminé plutôt que de prototype assemblé rapidement.
 
-Le problème principal était la lisibilité. Le fichier `app.py` contenait trop de responsabilités : configuration, routes, validation de formulaires, sécurité, manipulation de fichiers et logique de rendu. Pour un projet étudiant, cela rendait l’explication difficile.
-
-La refactorisation a donc gardé les fonctionnalités, mais a rendu l’organisation plus pédagogique.
+La version finale garde les mêmes idées de départ, mais elle les présente mieux: routes séparées, textes en français, pages plus sobres, rapport plus court et tests faciles à lancer.
 
 ## Diagnostic initial
 
-### 1. Fichier principal trop dense
+### 1. Un fichier principal trop chargé
 
-`app.py` mélangeait :
+Au départ, `app.py` portait beaucoup trop de responsabilités: configuration, routes, formulaires, sécurité, manipulation de fichiers et appels aux modules. C’est un classique dans un petit projet Flask: ça marche au début, puis ça devient difficile à expliquer.
 
-- la configuration Flask ;
-- les constantes de chemins ;
-- les fonctions de validation ;
-- les fonctions de nettoyage ;
-- les routes ;
-- la logique de génération ;
-- les messages utilisateur.
+La correction a consisté à déplacer chaque responsabilité vers un fichier clair. `app.py` sert maintenant de point d’entrée, et la logique applicative vit dans `studio/` et `modules/`.
 
-Ce type de fichier fonctionne, mais il est difficile à présenter devant un jury parce qu’il n’y a pas de séparation claire.
+### 2. Une interface à rendre plus cohérente
 
-### 2. Interface en anglais
+L’application avait besoin d’une voix unique. Les libellés ont été repris en français et les intitulés ont été harmonisés. Le style visuel a aussi été simplifié: moins d’effets décoratifs, plus d’espace, des cartes lisibles et une navigation qui reste stable.
 
-Les pages étaient majoritairement en anglais. Pour un projet présenté en français, cela pose deux problèmes :
+Ce choix colle mieux au contexte du projet: on présente un outil scolaire fonctionnel, pas une page publicitaire.
 
-- les textes ne correspondent pas au contexte de présentation ;
-- les accents français risquent d’être oubliés si la traduction est faite trop tard.
+### 3. Des tests à adapter à la nouvelle structure
 
-L’interface est maintenant en français, avec des textes plus naturels.
+Après la séparation des routes, certains tests ne pouvaient plus pointer vers les anciens chemins. Ils ont été ajustés pour suivre la nouvelle architecture sans réduire la couverture.
 
-### 3. Design trop créatif
-
-L’ancien style utilisait des effets décoratifs, des grands titres et des gradients. Cela donnait une impression de page créative, mais moins d’outil administratif.
-
-Le nouveau design est plus simple :
-
-- grille claire ;
-- cartes sobres ;
-- boutons plats ;
-- couleurs modérées ;
-- meilleure lisibilité.
-
-### 4. Tests liés à l’ancienne structure
-
-Certains tests utilisaient des chemins de patch comme `app.create_generative_art`. Après la séparation des routes, ces chemins devaient pointer vers les nouveaux modules.
-
-Les tests ont été mis à jour sans réduire la couverture.
+La suite vérifie notamment les pages principales, les formulaires protégés, la génération, la galerie et le nettoyage des fichiers temporaires.
 
 ## Architecture finale
 
-### Couche 1 : point d’entrée
+L’organisation suit une logique simple:
 
-`app.py` reste très court. Il sert seulement à créer et lancer l’application.
+- `app.py` lance l’application ;
+- `studio/app_factory.py` crée Flask et enregistre les routes ;
+- `studio/routes/` contient les vues par domaine ;
+- `studio/forms.py` lit les paramètres ;
+- `studio/storage.py` s’occupe des fichiers ;
+- `studio/security.py` protège les formulaires ;
+- `studio/team.py` prépare les profils de l’équipe ;
+- `modules/` garde les traitements eux-mêmes.
 
-### Couche 2 : création de l’application
-
-`studio/app_factory.py` crée l’application Flask, charge la configuration, active la sécurité CSRF et enregistre les routes.
-
-### Couche 3 : routes
-
-Les routes sont séparées par usage :
-
-- `pages.py` : accueil, équipe, galerie, téléchargement ;
-- `generative_routes.py` : atelier génératif et prévisualisation ;
-- `data_routes.py` : visualisation de données ;
-- `media_routes.py` : image et audio.
-
-Chaque fichier reste plus facile à lire qu’un grand fichier central.
-
-### Couche 4 : services simples
-
-Les fichiers suivants évitent la répétition :
-
-- `forms.py` : convertir et valider les valeurs des formulaires ;
-- `storage.py` : sauvegarder, lister, paginer et nettoyer les fichiers ;
-- `security.py` : gérer le jeton CSRF ;
-- `labels.py` : centraliser les libellés français ;
-- `team.py` : préparer les profils des membres.
-
-### Couche 5 : modules métier
-
-Le dossier `modules/` garde les traitements principaux :
-
-- génération artistique ;
-- visualisation de données ;
-- traitement d’image ;
-- traitement audio.
-
-Cette séparation est importante : les routes Flask ne devraient pas contenir les algorithmes artistiques eux-mêmes.
-
-## Pourquoi cette version est plus adaptée au niveau étudiant
-
-Le projet évite les abstractions trop avancées. Il n’utilise pas de base de données, de système d’authentification ou de framework frontend complexe.
-
-Les choix sont simples à expliquer :
-
-- une fonction pour créer l’application ;
-- un fichier par groupe de routes ;
-- un fichier pour les formulaires ;
-- un fichier pour les fichiers ;
-- des modules métier séparés.
-
-Cela montre une bonne organisation sans donner l’impression d’un projet trop sophistiqué.
+Cette séparation évite de mélanger interface, validation et génération artistique. Elle rend aussi la soutenance plus confortable: chaque fichier a une raison d’être.
 
 ## Parcours utilisateur
 
-### Accueil
+L’utilisateur arrive sur le tableau de bord, choisit un atelier, règle quelques paramètres, lance une génération ou un traitement, puis retrouve le résultat dans la galerie. Les fichiers sont sauvegardés dans `static/generated`, et les fichiers importés temporairement sont supprimés après usage.
 
-La page d’accueil sert de tableau de bord avec quelques compteurs et des accès rapides.
+Le parcours reste volontairement court. C’est ce qui permet de tester et de présenter l’application sans préparation compliquée.
 
-### Atelier génératif
-
-L’utilisateur choisit les paramètres puis génère un visuel. La prévisualisation permet de vérifier rapidement le rendu.
-
-### Données
-
-L’utilisateur peut importer un CSV ou utiliser les données de démonstration. Le résultat est exporté en image.
-
-### Médias
-
-L’utilisateur peut importer une image et appliquer un effet. L’audio est proposé seulement si l’environnement le permet.
-
-### Galerie
-
-Les fichiers générés sont listés avec pagination et téléchargement.
-
-## Répartition en quatre parties
+## Répartition du travail
 
 ### Aya EL Amrani
 
-Travail sur la structure Flask :
-
-- extraction de la configuration ;
-- extraction des formulaires ;
-- extraction du stockage ;
-- séparation des routes.
+Travail sur la structure Flask: configuration, formulaires, stockage et séparation des routes.
 
 ### Khadija Baskar
 
-Travail sur la langue et les contenus :
-
-- libellés français centralisés ;
-- traduction des templates ;
-- correction des messages visibles ;
-- respect des accents.
+Travail sur les textes visibles: libellés français, cohérence des intitulés et contenu des pages.
 
 ### Hossam OUammi
 
-Travail sur l’interface :
-
-- passage à un style administratif ;
-- réduction des effets décoratifs ;
-- navigation plus sobre ;
-- amélioration de la lisibilité.
+Travail sur l’intégration, le design administratif, les pages de présentation, les médias et la galerie.
 
 ### Abderrahmane El Garti
 
-Travail sur la qualité :
+Travail sur les tests, la documentation, le rapport et l’analyse technique.
 
-- adaptation des tests ;
-- vérification de la suite ;
-- documentation ;
-- analyse finale.
+## Points maîtrisés
+
+- L’application se lance avec `python app.py`.
+- Les dépendances sont listées dans `requirements.txt`.
+- Le README contient les étapes d’installation et de test.
+- Le rapport final respecte la limite de 2-3 pages.
+- Les photos de l’équipe sont chargées automatiquement depuis `static/Admins`.
+- La suite `unittest` valide les parcours principaux.
 
 ## Conclusion
 
-La version finale garde l’idée créative du projet, mais elle est plus propre à expliquer. Le code est séparé, l’interface est en français, le style est plus administratif et les tests confirment que les parcours principaux fonctionnent.
+La version finale est plus propre, mais elle reste à taille humaine. C’est important pour ce type de projet: le code doit montrer que l’on comprend Flask, les formulaires, les fichiers et la génération de contenu, sans donner l’impression d’avoir caché la logique dans une architecture trop lourde.

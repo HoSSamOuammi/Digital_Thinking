@@ -1,68 +1,68 @@
-# Rapport final - Studio generatif interactif
+# Rapport final - Studio génératif interactif
 
-- Date de verification : 26/06/2026
-- Periode de travail : 04/03/2026 au 26/06/2026
-- Depot GitHub : https://github.com/HoSSamOuammi/Digital_Thinking
-- Objet : application Flask de creativite numerique.
+- Date de vérification : 26/06/2026
+- Période de travail : 04/03/2026 au 26/06/2026
+- Dépôt GitHub : https://github.com/HoSSamOuammi/Digital_Thinking
+- Objet : application Flask pour un projet de créativité numérique.
 
 ## 1. Concept et direction artistique
 
-Le projet est un studio generatif interactif qui rassemble plusieurs ateliers numeriques dans une interface unique. L'objectif artistique est de transformer des parametres simples, des donnees et des medias en productions visuelles exportables, tout en gardant une experience claire pour une presentation scolaire.
+Le projet fonctionne comme un petit studio numérique. À partir de paramètres simples, d'un fichier CSV ou d'une image, l'utilisateur peut produire un rendu visuel puis le retrouver dans une galerie. La partie créative vient du fait que les réglages changent réellement le résultat, sans demander à l'utilisateur de toucher au code.
 
-La direction visuelle choisie est sobre et administrative : fond clair, cartes lisibles, boutons simples, palette bleu-vert avec accents limites et textes francais. Ce choix met en avant le fonctionnement de l'application plus que la decoration.
+La direction artistique est volontairement calme: interface claire, cartes sobres, couleurs limitées et textes en français. Ce choix rend l'application plus facile à présenter et évite que le décor prenne le dessus sur le fonctionnement.
 
-## 2. Modules implementes
+## 2. Modules implémentés
 
-| Module | Fonction | Resultat |
+| Module | Fonction | Résultat |
 | --- | --- | --- |
-| Tableau de bord | Page d'accueil avec resume du studio, compteurs et acces rapides. | Point d'entree clair pour presenter le projet. |
-| Atelier generatif | Generation de visuels a partir de series, palettes, graine, densite et accents dessines. | Images exportees dans la galerie. |
-| Donnees visuelles | Lecture CSV ou donnees de demonstration, nettoyage numerique et transformation graphique. | Visualisations en image. |
-| Outils medias | Traitement image: noir et blanc, sepia, contours, glitch, rotation, palette dominante. Audio optionnel. | Fichiers transformes et telechargeables. |
-| Galerie | Listing separe des images et audios generes avec pagination. | Consultation et telechargement des resultats. |
-| Equipe | Profils, roles, emails et photos chargees depuis static/Admins. | Lien entre interface et repartition du travail. |
+| Tableau de bord | Accueil du studio, compteurs et raccourcis vers les ateliers. | Une entrée simple pour présenter le projet rapidement. |
+| Atelier génératif | Séries visuelles, palettes, graine, densité, taille du canevas et accents dessinés. | Visuels exportés puis visibles dans la galerie. |
+| Données visuelles | Lecture d'un CSV ou d'un jeu de démonstration, nettoyage puis rendu graphique. | Images de visualisation prêtes à télécharger. |
+| Outils médias | Effets image: sépia, contours, glitch, rotation, palette dominante. Audio si ffmpeg est disponible. | Fichiers transformés sans bloquer le reste de l'application. |
+| Galerie | Liste séparée des images et audios générés, avec pagination. | Trace concrète du parcours complet: créer, retrouver, télécharger. |
+| Équipe | Profils, rôles, emails et photos chargées depuis static/Admins. | Présentation propre du groupe dans l'application. |
 
-## 3. Outils utilises et pipeline technique
+## 3. Outils utilisés et pipeline technique
 
 | Outil | Utilisation |
 | --- | --- |
-| Flask / Jinja2 | Routes serveur, templates HTML et formulaires. |
-| Pillow | Effets et exports d'images. |
-| Pandas / NumPy | Lecture, nettoyage et preparation des donnees CSV. |
-| Matplotlib | Production des visualisations de donnees. |
-| PyDub / ffmpeg | Traitement audio lorsque l'environnement le permet. |
-| unittest | Verification automatique des routes et parcours principaux. |
-| Git / GitHub | Historique, collaboration et depot final public. |
+| Flask / Jinja2 | Routes serveur, rendu HTML et formulaires. |
+| Pillow | Effets image et export des fichiers traités. |
+| Pandas / NumPy | Lecture et préparation des données numériques. |
+| Matplotlib | Création des visualisations à partir des données. |
+| PyDub / ffmpeg | Traitement audio lorsque la machine le permet. |
+| unittest | Tests des routes, formulaires, exports et nettoyages. |
+| Git / GitHub | Historique du travail et dépôt final à rendre. |
 
 Pipeline :
-- L'utilisateur choisit une page atelier depuis le tableau de bord.
-- Flask recoit le formulaire et valide les donnees utiles.
-- Le module Python specialise genere ou transforme le contenu.
-- Le fichier final est sauvegarde dans static/generated.
-- La page affiche le resultat et propose le telechargement.
-- Les tests verifient les routes, la securite CSRF, la galerie et le nettoyage des fichiers.
+- L'utilisateur part du tableau de bord et choisit un atelier.
+- Flask reçoit le formulaire et vérifie les valeurs utiles.
+- Le module Python concerné génère ou transforme le contenu.
+- Le résultat est enregistré dans static/generated.
+- La page affiche le fichier final et propose le téléchargement.
+- Les tests rejouent les parcours importants pour vérifier que rien ne casse.
 
-## 4. Challenges et solutions
+## 4. Challenges rencontrés et solutions
 
 | Challenge | Solution |
 | --- | --- |
-| Code initial trop centralise | Separation en create_app, routes, formulaires, stockage, securite et modules metier. |
-| Interface a rendre presentable en contexte scolaire | Design sobre, navigation simple, libelles francais et mise en page responsive. |
-| Dependance audio sensible a l'environnement | Detection de disponibilite et degradation propre si ffmpeg n'est pas installe. |
-| Fichiers generes et imports temporaires | Nettoyage automatique, pagination et limites de cache pour garder le depot propre. |
+| Un app.py devenu trop chargé | Séparer la configuration, les routes, les formulaires, le stockage et les modules métier. |
+| Une interface qui devait paraître terminée | Reprendre les textes en français et choisir un style plus sobre, plus proche d'un outil de travail. |
+| L'audio dépend de ffmpeg | Garder le module audio optionnel pour que l'application fonctionne même si ffmpeg n'est pas installé. |
+| Les fichiers générés peuvent vite s'accumuler | Limiter les caches, nettoyer les imports temporaires et paginer la galerie. |
 
-## 5. Equipe et livrables
+## 5. Équipe et livrables
 
-| Photo | Membre | Role |
+| Photo | Membre | Rôle |
 | --- | --- | --- |
-| ![Aya EL Amrani](../../static/Admins/aya.jpeg) | Aya EL Amrani | Architecture Flask, configuration, formulaires, stockage et routes. |
-| ![Khadija Baskar](../../static/Admins/khadija.jpeg) | Khadija Baskar | Traduction francaise, libelles, contenus visibles et coherence UI. |
-| ![Hossam OUammi](../../static/Admins/hossam.jpeg) | Hossam OUammi | Integration Flask, design administratif, medias, galerie et presentation. |
+| ![Aya EL Amrani](../../static/Admins/aya.jpeg) | Aya EL Amrani | Structure Flask, configuration, formulaires, stockage et routes. |
+| ![Khadija Baskar](../../static/Admins/khadija.jpeg) | Khadija Baskar | Textes français, libellés, cohérence des intitulés et contenu des pages. |
+| ![Hossam OUammi](../../static/Admins/hossam.jpeg) | Hossam OUammi | Intégration Flask, interface, médias, galerie et pages de présentation. |
 | ![Abderrahmane El Garti](../../static/Admins/abdo.jpg) | Abderrahmane El Garti | Tests fonctionnels, documentation, rapport et analyse technique. |
 
-| Livrable | Verification |
+| Livrable | Vérification |
 | --- | --- |
-| Base de code complete | Dossiers app.py, studio, modules, templates, static, tests et requirements.txt. |
-| Application Flask | Lancement par python app.py, routes principales testees. |
-| README | Installation, lancement, structure, tests et notes techniques. |
-| Rapport final | PDF de 2-3 pages avec concept, modules, pipeline, challenges et solutions. |
+| Base de code complète | Dépôt avec app.py, studio, modules, templates, static, tests et requirements.txt. |
+| Application Flask | Lancement par python app.py; les pages principales répondent correctement. |
+| README | Installation, lancement, tests, structure et livrables finaux. |
+| Rapport final | PDF de 2-3 pages couvrant le concept, les modules, le pipeline et les challenges. |
